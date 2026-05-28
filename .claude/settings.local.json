@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//d//**)",
+      "Bash(mv \"/d/项目/test1\" \"/d/项目/个人重要信息库\")",
+      "Bash(git init *)",
+      "Bash(git add *)",
+      "Bash(git commit -m 'Initial commit: Personal Information Library - password manager *)"
+    ]
+  }
+}

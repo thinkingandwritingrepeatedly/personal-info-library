@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>个人重要信息库 - 设计文档</title>
+<style>
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.8; color: #333; max-width: 900px; margin: 0 auto; padding: 40px 20px; background: #f5f5f5; }
+h1 { color: #1a1a2e; border-bottom: 3px solid #7b2ff7; padding-bottom: 10px; }
+h2 { color: #16213e; margin-top: 30px; border-left: 4px solid #7b2ff7; padding-left: 15px; }
+h3 { color: #0f3460; }
+.doc-header { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+.version-info { color: #666; font-size: 14px; }
+.architecture { background: white; padding: 20px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #00d2ff; }
+.component { background: #f9f9f9; padding: 15px; margin: 10px 0; border-radius: 4px; border-left: 4px solid #7b2ff7; }
+code { background: #f0f0f0; padding: 2px 6px; border-radius: 3px; font-family: 'Courier New', monospace; }
+pre { background: #f0f0f0; padding: 15px; border-radius: 4px; overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; margin: 15px 0; background: white; }
+th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+th { background: #7b2ff7; color: white; }
+tr:nth-child(even) { background: #f9f9f9; }
+.tech-stack { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 15px 0; }
+.tech-item { background: white; padding: 15px; border-radius: 4px; border: 1px solid #ddd; }
+.tech-item strong { color: #7b2ff7; }
+</style>
+</head>
+<body>
+
+<div class="doc-header">
+<h1>个人重要信息库</h1>
+<h2 style="border: none; margin: 0; padding: 0; color: #666;">设计文档</h2>
+<p class="version-info">版本: 1.0 | 日期: 2026年5月27日 | 状态: 已完成</p>
+</div>
+
+<h2>1. 系统架构</h2>
+
+<div class="architecture">
+<h3>1.1 整体架构</h3>
+<p>本应用采用单文件 HTML 架构，所有功能集成在一个 HTML 文件中，包含：</p>
+<ul>
+<li><strong>HTML 结构</strong>：定义页面布局和 DOM 元素</li>
+<li><strong>CSS 样式</strong>：提供深色主题和响应式设计</li>
+<li><strong>JavaScript 逻辑</strong>：实现所有业务功能</li>
+</ul>
+<p>这种设计的优点是部署简单、无需服务器、易于分享和备份。</p>
+</div>
+
+<h2>2. 技术栈</h2>
+
+<div class="tech-stack">
+<div class="tech-item">
+<strong>前端框架</strong><br>
+原生 HTML5 + CSS3 + JavaScript ES6<br>
+无外部依赖，完全独立运行
+</div>
+<div class="tech-item">
+<strong>存储方案</strong><br>
+浏览器 localStorage API<br>
+容量：5-10MB（因浏览器而异）
+</div>
+<div class="tech-item">
+<strong>兼容性</strong><br>
+Chrome 4+, Firefox 3.5+<br>
+Edge, Safari 等现代浏览器
+</div>
+<div class="tech-item">
+<strong>响应式设计</strong><br>
+CSS Grid + Flexbox<br>
+支持桌面、平板、手机
+</div>
+</div>
+
+<h2>3. 核心模块设计</h2>
+
+<h3>3.1 数据管理模块</h3>
+
+<div class="component">
+<strong>职责</strong>：管理数据的增删改查和持久化<br><br>
+<strong>关键函数</strong>：
+<ul>
+<li><code>save()</code> - 将数据保存到 localStorage</li>
+<li><code>saveEntry()</code> - 保存单条记录</li>
+<li><code>deleteEntry(id)</code> - 删除单条记录</li>
+<li><code>editEntry(id)</code> - 编辑记录</li>
+</ul>
+<strong>数据结构</strong>：
+<pre>entries = [
+  {
+    id: "1234567890",
+    name: "GitHub",
+    url: "https://github.com",
+    user: "username",
+    pass: "password",
+    note: "个人账号",
+    createdAt: "2026-05-27T10:30:00.000Z"
+  },
+  ...
+]</pre>
+</div>
+
+<h3>3.2 UI 渲染模块</h3>
+
+<div class="component">
+<strong>职责</strong>：根据数据状态渲染页面<br><br>
+<strong>关键函数</strong>：
+<ul>
+<li><code>render()</code> - 主渲染函数，更新整个列表</li>
+<li><code>getFiltered()</code> - 获取过滤后的数据</li>
+<li><code>updateStats()</code> - 更新统计信息</li>
+<li><code>updateBatchBar()</code> - 更新批量操作栏</li>
+</ul>
+<strong>渲染流程</strong>：
+<pre>用户操作 → 修改 entries 数据 → 调用 save() → 调用 render() → 更新 DOM</pre>
+</div>
+
+<h3>3.3 表单管理模块</h3>
+
+<div class="component">
+<strong>职责</strong>：管理信息录入和编辑表单<br><br>
+<strong>关键函数</strong>：
+<ul>
+<li><code>showForm(name, url)</code> - 显示表单（新增或编辑）</li>
+<li><code>hideForm()</code> - 隐藏表单</li>
+<li><code>clearForm()</code> - 清空表单</li>
+<li><code>saveEntry()</code> - 保存表单数据</li>
+</ul>
+<strong>表单字段</strong>：
+<ul>
+<li>fName - 网站名称</li>
+<li>fUrl - 网站地址</li>
+<li>fUser - 账号</li>
+<li>fPass - 密码</li>
+<li>fNote - 备注</li>
+</ul>
+</div>
+
+<h3>3.4 搜索过滤模块</h3>
+
+<div class="component">
+<strong>职责</strong>：实现搜索和时间过滤功能<br><br>
+<strong>关键函数</strong>：
+<ul>
+<li><code>getFiltered()</code> - 根据搜索词和时间范围过滤数据</li>
+</ul>
+<strong>过滤逻辑</strong>：
+<pre>1. 获取搜索关键词（searchInput）
+2. 获取时间范围（groupSelect）
+3. 遍历 entries，匹配搜索词
+4. 根据时间范围进一步过滤
+5. 返回过滤结果</pre>
+<strong>时间范围</strong>：
+<ul>
+<li>all - 全部</li>
+<li>today - 今天</li>
+<li>week - 本周（7天内）</li>
+<li>month - 本月</li>
+</ul>
+</div>
+
+<h3>3.5 批量操作模块</h3>
+
+<div class="component">
+<strong>职责</strong>：实现批量选择、导出、删除功能<br><br>
+<strong>关键函数</strong>：
+<ul>
+<li><code>toggleSelect(id)</code> - 切换单条记录的选择状态</li>
+<li><code>toggleAll()</code> - 全选/反选</li>
+<li><code>batchExport()</code> - 批量导出选中记录</li>
+<li><code>batchDelete()</code> - 批量删除选中记录</li>
+</ul>
+<strong>数据结构</strong>：
+<pre>selected = new Set()  // 存储已选择的记录 ID</pre>
+</div>
+
+<h3>3.6 导入导出模块</h3>
+
+<div class="component">
+<strong>职责</strong>：实现数据的备份和恢复<br><br>
+<strong>关键函数</strong>：
+<ul>
+<li><code>exportData()</code> - 导出全部数据为 JSON</li>
+<li><code>batchExport()</code> - 导出选中数据为 JSON</li>
+<li><code>importData(event)</code> - 导入 JSON 文件</li>
+</ul>
+<strong>导出格式</strong>：
+<pre>[
+  { id, name, url, user, pass, note, createdAt },
+  ...
+]</pre>
+<strong>导入逻辑</strong>：
+<ul>
+<li>验证文件格式是否为有效 JSON 数组</li>
+<li>检查每条记录的 ID，避免重复导入</li>
+<li>为缺少 createdAt 的记录添加当前时间</li>
+<li>将新记录添加到列表顶部</li>
+</ul>
+</div>
+
+<h3>3.7 书签工具模块</h3>
+
+<div class="component">
+<strong>职责</strong>：生成和管理书签工具<br><br>
+<strong>关键函数</strong>：
+<ul>
+<li><code>setupBookmarklet()</code> - 生成书签代码</li>
+<li><code>checkAutoFill()</code> - 检查 URL 参数并自动填充表单</li>
+</ul>
+<strong>工作流程</strong>：
+<pre>1. setupBookmarklet() 生成 JavaScript 书签代码
+2. 用户将书签拖到浏览器书签栏
+3. 用户在任意网页点击书签
+4. 书签执行 JavaScript，打开本应用并传递 URL 参数
+5. checkAutoFill() 读取参数，自动填充表单
+6. 用户填写账号密码后保存</pre>
+<strong>书签代码</strong>：
+<pre>javascript:void(window.open(
+  'file:///path/to/passwords.html?autoName='+
+  encodeURIComponent(document.title)+
+  '&autoUrl='+encodeURIComponent(location.href)
+))</pre>
+</div>
+
+<h3>3.8 统计分析模块</h3>
+
+<div class="component">
+<strong>职责</strong>：计算和显示统计信息<br><br>
+<strong>关键函数</strong>：
+<ul>
+<li><code>updateStats()</code> - 更新统计数据</li>
+</ul>
+<strong>统计指标</strong>：
+<ul>
+<li>总记录数 - entries.length</li>
+<li>今日新增 - createdAt 为今天的记录数</li>
+<li>本周新增 - createdAt 在过去7天的记录数</li>
+<li>本月新增 - createdAt 在本月的记录数</li>
+<li>高频关键字 - 从 name 和 note 中提取，排序后取前3个</li>
+</ul>
+<strong>关键字提取逻辑</strong>：
+<pre>1. 将 name 和 note 合并
+2. 按空格和标点符号分割
+3. 过滤掉长度 < 2 的单词
+4. 过滤掉纯数字
+5. 过滤掉协议关键字（http, https）
+6. 统计每个单词出现次数
+7. 按频率排序，取前3个</pre>
+</div>
+
+<h3>3.9 事件处理模块</h3>
+
+<div class="component">
+<strong>职责</strong>：处理用户交互事件<br><br>
+<strong>事件委托</strong>：
+<pre>// 使用事件委托处理动态生成的元素
+document.getElementById('entries').addEventListener('click', function(ev) {
+  const btn = ev.target.closest('[data-action]');
+  if (!btn) return;
+  const action = btn.dataset.action;
+  const id = btn.dataset.id;
+  // 根据 action 执行相应操作
+});</pre>
+<strong>支持的操作</strong>：
+<ul>
+<li>edit - 编辑记录</li>
+<li>delete - 删除记录</li>
+<li>copy - 复制字段</li>
+<li>togglePwd - 切换密码显示</li>
+<li>select - 选择记录</li>
+</ul>
+</div>
+
+<h2>4. 页面布局</h2>
+
+<table>
+<tr>
+<th>区域</th>
+<th>功能</th>
+<th>组件</th>
+</tr>
+<tr>
+<td>顶部</td>
+<td>标题和存储路径提示</td>
+<td>h1, storage-notice</td>
+</tr>
+<tr>
+<td>工具栏</td>
+<td>搜索、过滤、添加、导出、导入</td>
+<td>toolbar, input, select, buttons</td>
+</tr>
+<tr>
+<td>统计面板</td>
+<td>显示统计数据</td>
+<td>stats-panel, stat-item</td>
+</tr>
+<tr>
+<td>批量操作栏</td>
+<td>全选、批量导出、批量删除</td>
+<td>batch-bar, checkboxes, buttons</td>
+</tr>
+<tr>
+<td>表单区域</td>
+<td>新增或编辑记录</td>
+<td>form-card, form-row, input</td>
+</tr>
+<tr>
+<td>列表区域</td>
+<td>显示所有记录</td>
+<td>entries, entry</td>
+</tr>
+<tr>
+<td>书签工具</td>
+<td>快速收藏工具教程</td>
+<td>bookmarklet-section</td>
+</tr>
+</table>
+
+<h2>5. 样式设计</h2>
+
+<h3>5.1 色彩方案</h3>
+<table>
+<tr>
+<th>用途</th>
+<th>颜色</th>
+<th>说明</th>
+</tr>
+<tr>
+<td>背景</td>
+<td>#1a1a2e, #16213e, #0f3460</td>
+<td>深色渐变背景</td>
+</tr>
+<tr>
+<td>主色</td>
+<td>#7b2ff7</td>
+<td>紫色，用于强调</td>
+</tr>
+<tr>
+<td>辅色</td>
+<td>#00d2ff</td>
+<td>青色，用于数据</td>
+</tr>
+<tr>
+<td>危险色</td>
+<td>#e74c3c</td>
+<td>红色，用于删除</td>
+</tr>
+<tr>
+<td>警告色</td>
+<td>#f39c12</td>
+<td>橙色，用于关键字</td>
+</tr>
+<tr>
+<td>文字</td>
+<td>#e0e0e0</td>
+<td>浅灰色，易于阅读</td>
+</tr>
+</table>
+
+<h3>5.2 响应式断点</h3>
+<pre>桌面端：> 1024px
+平板端：600px - 1024px
+手机端：< 600px
+
+主要变化：
+- 表单从两列变为一列
+- 条目操作按钮从右侧移到下方
+- 工具栏按钮换行显示</pre>
+
+<h2>6. 安全性设计</h2>
+
+<h3>6.1 数据安全</h3>
+<ul>
+<li><strong>本地存储</strong>：所有数据存储在浏览器 localStorage，不上传到服务器</li>
+<li><strong>密码隐藏</strong>：密码默认显示为点号，用户可选择显示</li>
+<li><strong>HTML 转义</strong>：使用 <code>esc()</code> 函数转义用户输入，防止 XSS 攻击</li>
+</ul>
+
+<h3>6.2 用户提示</h3>
+<ul>
+<li>在页面顶部显示存储路径，提醒用户不要清除浏览器数据</li>
+<li>建议用户定期导出备份</li>
+<li>删除操作前要求确认</li>
+</ul>
+
+<h2>7. 性能优化</h2>
+
+<ul>
+<li><strong>单文件设计</strong>：无需加载外部资源，加载速度快</li>
+<li><strong>事件委托</strong>：使用事件委托而非为每个元素绑定事件，减少内存占用</li>
+<li><strong>DOM 批量更新</strong>：使用 innerHTML 一次性更新列表，而非逐个添加元素</li>
+<li><strong>搜索防抖</strong>：搜索输入时实时过滤，无需额外的防抖处理</li>
+</ul>
+
+<h2>8. 浏览器兼容性</h2>
+
+<table>
+<tr>
+<th>浏览器</th>
+<th>最低版本</th>
+<th>支持情况</th>
+</tr>
+<tr>
+<td>Chrome</td>
+<td>4+</td>
+<td>完全支持</td>
+</tr>
+<tr>
+<td>Firefox</td>
+<td>3.5+</td>
+<td>完全支持</td>
+</tr>
+<tr>
+<td>Safari</td>
+<td>4+</td>
+<td>完全支持</td>
+</tr>
+<tr>
+<td>Edge</td>
+<td>12+</td>
+<td>完全支持</td>
+</tr>
+<tr>
+<td>IE</td>
+<td>-</td>
+<td>不支持（ES6 语法）</td>
+</tr>
+</table>
+
+<h2>9. 扩展性考虑</h2>
+
+<ul>
+<li><strong>模块化</strong>：各功能模块相对独立，易于添加新功能</li>
+<li><strong>数据结构</strong>：记录结构灵活，可添加新字段而不影响现有功能</li>
+<li><strong>事件系统</strong>：使用事件委托，新增的 DOM 元素自动支持事件处理</li>
+<li><strong>未来扩展</strong>：可考虑添加分类、标签、搜索历史等功能</li>
+</ul>
+
+</body>
+</html>

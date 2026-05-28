@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>个人重要信息库 - 功能使用说明</title>
+<style>
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.8; color: #333; max-width: 900px; margin: 0 auto; padding: 40px 20px; background: #f5f5f5; }
+h1 { color: #1a1a2e; border-bottom: 3px solid #7b2ff7; padding-bottom: 10px; }
+h2 { color: #16213e; margin-top: 30px; border-left: 4px solid #7b2ff7; padding-left: 15px; }
+h3 { color: #0f3460; }
+.doc-header { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+.version-info { color: #666; font-size: 14px; }
+.feature-box { background: white; padding: 20px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #7b2ff7; }
+.step-guide { background: #f9f9f9; padding: 15px; border-radius: 4px; margin: 10px 0; }
+.step { margin: 10px 0; }
+.step strong { color: #7b2ff7; }
+.tip { background: #e8f4f8; padding: 12px; border-left: 4px solid #00d2ff; border-radius: 4px; margin: 10px 0; }
+.warning { background: #fef2f2; padding: 12px; border-left: 4px solid #e74c3c; border-radius: 4px; margin: 10px 0; }
+.success { background: #f0fdf4; padding: 12px; border-left: 4px solid #27ae60; border-radius: 4px; margin: 10px 0; }
+code { background: #f0f0f0; padding: 2px 6px; border-radius: 3px; font-family: 'Courier New', monospace; }
+.button-label { display: inline-block; background: #7b2ff7; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; margin: 0 4px; }
+.keyboard { display: inline-block; background: #333; color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-family: monospace; margin: 0 4px; }
+table { width: 100%; border-collapse: collapse; margin: 15px 0; background: white; }
+th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+th { background: #7b2ff7; color: white; }
+tr:nth-child(even) { background: #f9f9f9; }
+.screenshot-note { color: #666; font-size: 12px; font-style: italic; }
+</style>
+</head>
+<body>
+
+<div class="doc-header">
+<h1>个人重要信息库</h1>
+<h2 style="border: none; margin: 0; padding: 0; color: #666;">详细功能使用说明</h2>
+<p class="version-info">版本: 1.0 | 日期: 2026年5月27日 | 用户手册</p>
+</div>
+
+<h2>1. 快速开始</h2>
+
+<div class="feature-box">
+<h3>1.1 打开应用</h3>
+<p>直接在浏览器中打开 <code>passwords.html</code> 文件即可使用。无需安装任何软件或插件。</p>
+<div class="success">
+<strong>✓ 提示</strong>：应用完全在本地运行，所有数据存储在您的浏览器中，不会上传到任何服务器。
+</div>
+</div>
+
+<div class="feature-box">
+<h3>1.2 界面概览</h3>
+<p>应用界面分为以下几个部分：</p>
+<ul>
+<li><strong>顶部</strong>：应用标题和存储路径提示</li>
+<li><strong>工具栏</strong>：搜索、过滤、添加、导出、导入功能</li>
+<li><strong>统计面板</strong>：显示记录总数和时间段统计</li>
+<li><strong>批量操作栏</strong>：全选、批量导出、批量删除</li>
+<li><strong>表单区域</strong>：添加或编辑记录的表单</li>
+<li><strong>列表区域</strong>：显示所有保存的记录</li>
+<li><strong>书签工具</strong>：快速收藏工具教程</li>
+</ul>
+</div>
+
+<h2>2. 核心功能详解</h2>
+
+<h3>2.1 添加新记录</h3>
+
+<div class="feature-box">
+<div class="step-guide">
+<div class="step"><strong>步骤 1</strong>：点击工具栏中的 <span class="button-label">+ 添加</span> 按钮</div>
+<div class="step"><strong>步骤 2</strong>：表单会展开，显示以下字段：
+<ul>
+<li><strong>网站名称</strong>：例如 "GitHub"、"Gmail" 等</li>
+<li><strong>网站地址</strong>：例如 "https://github.com"</li>
+<li><strong>账号</strong>：用户名或邮箱</li>
+<li><strong>密码</strong>：登录密码</li>
+<li><strong>备注</strong>：可选的额外信息</li>
+</ul>
+</div>
+<div class="step"><strong>步骤 3</strong>：填写至少一个字段（名称或地址）</div>
+<div class="step"><strong>步骤 4</strong>：点击 <span class="button-label">保存</span> 按钮</div>
+</div>
+
+<div class="success">
+<strong>✓ 成功</strong>：记录被添加到列表顶部，显示创建时间，并显示"已添加"提示。
+</div>
+
+<div class="tip">
+<strong>💡 提示</strong>：
+<ul>
+<li>名称和地址至少填写一个，其他字段可选</li>
+<li>创建时间会自动记录，便于后续统计和分组</li>
+<li>可以随时编辑记录，修改任何字段</li>
+</ul>
+</div>
+</div>
+
+<h3>2.2 查看和编辑记录</h3>
+
+<div class="feature-box">
+<h4>查看记录</h4>
+<p>所有保存的记录都显示在列表中，每条记录包含：</p>
+<ul>
+<li>网站名称（加粗显示）</li>
+<li>网站地址（可点击打开）</li>
+<li>账号和密码（密码默认隐藏）</li>
+<li>备注信息</li>
+<li>创建时间</li>
+</ul>
+
+<h4>编辑记录</h4>
+<div class="step-guide">
+<div class="step"><strong>步骤 1</strong>：找到要编辑的记录</div>
+<div class="step"><strong>步骤 2</strong>：点击记录右侧的 <span class="button-label">编辑</span> 按钮</div>
+<div class="step"><strong>步骤 3</strong>：表单会展开并填充该记录的信息</div>
+<div class="step"><strong>步骤 4</strong>：修改需要更改的字段</div>
+<div class="step"><strong>步骤 5</strong>：点击 <span class="button-label">保存</span> 按钮</div>
+</div>
+
+<div class="success">
+<strong>✓ 成功</strong>：记录被更新，显示"已更新"提示。创建时间保持不变。
+</div>
+
+<div class="tip">
+<strong>💡 提示</strong>：点击 <span class="button-label">取消</span> 按钮可以放弃编辑。
+</div>
+</div>
+
+<h3>2.3 密码管理</h3>
+
+<div class="feature-box">
+<h4>隐藏密码</h4>
+<p>为了安全起见，密码默认显示为点号（••••••）。</p>
+
+<h4>显示密码</h4>
+<div class="step-guide">
+<div class="step"><strong>步骤 1</strong>：找到包含密码的记录</div>
+<div class="step"><strong>步骤 2</strong>：点击记录右侧的 <span class="button-label">👁</span> 按钮</div>
+</div>
+
+<div class="success">
+<strong>✓ 成功</strong>：密码以明文显示。再次点击可以隐藏。
+</div>
+
+<h4>复制密码</h4>
+<div class="step-guide">
+<div class="step"><strong>步骤 1</strong>：点击 <span class="button-label">复制密码</span> 按钮</div>
+</div>
+
+<div class="success">
+<strong>✓ 成功</strong>：密码被复制到剪贴板，显示"已复制到剪贴板"提示。
+</div>
+
+<div class="warning">
+<strong>⚠ 警告</strong>：
+<ul>
+<li>不要在公共计算机上使用此应用</li>
+<li>不要将密码分享给他人</li>
+<li>定期更改重要账号的密码</li>
+</ul>
+</div>
+</div>
+
+<h3>2.4 删除记录</h3>
+
+<div class="feature-box">
+<div class="step-guide">
+<div class="step"><strong>步骤 1</strong>：找到要删除的记录</div>
+<div class="step"><strong>步骤 2</strong>：点击记录右侧的 <span class="button-label">删除</span> 按钮</div>
+<div class="step"><strong>步骤 3</strong>：在确认对话框中点击"确定"</div>
+</div>
+
+<div class="success">
+<strong>✓ 成功</strong>：记录被删除，显示"已删除"提示。
+</div>
+
+<div class="warning">
+<strong>⚠ 警告</strong>：删除操作无法撤销。如果误删，可以通过导入备份来恢复。
+</div>
+</div>
+
+<h3>2.5 搜索功能</h3>
+
+<div class="feature-box">
+<h4>快速搜索</h4>
+<div class="step-guide">
+<div class="step"><strong>步骤 1</strong>：在工具栏的搜索框中输入关键词</div>
+<div class="step"><strong>步骤 2</strong>：列表会实时过滤，只显示匹配的记录</div>
+</div>
+
+<p>搜索会在以下字段中查找：</p>
+<ul>
+<li>网站名称</li>
+<li>网站地址</li>
+<li>备注</li>
+</ul>
+
+<div class="tip">
+<strong>💡 提示</strong>：搜索不区分大小写，支持部分匹配。例如搜索"git"会匹配"GitHub"。
+</div>
+
+<h4>清除搜索</h4>
+<p>清空搜索框即可显示所有记录。</p>
+</div>
+
+<h3>2.6 时间过滤</h3>
+
+<div class="feature-box">
+<p>使用工具栏中的下拉菜单按时间范围过滤记录：</p>
+
+<table>
+<tr>
+<th>选项</th>
+<th>说明</th>
+</tr>
+<tr>
+<td>全部</td>
+<td>显示所有记录</td>
+</tr>
+<tr>
+<td>今天</td>
+<td>显示今天添加的记录</td>
+</tr>
+<tr>
+<td>本周</td>
+<td>显示过去7天添加的记录</td>
+</tr>
+<tr>
+<td>本月</td>
+<td>显示本月添加的记录</td>
+</tr>
+</table>
+
+<div class="tip">
+<strong>💡 提示</strong>：搜索和时间过滤可以组合使用，例如搜索"GitHub"并选择"本周"，会显示本周添加的名称包含"GitHub"的记录。
+</div>
+</div>
+
+<h3>2.7 批量操作</h3>
+
+<div class="feature-box">
+<h4>全选记录</h4>
+<div class="step-guide">
+<div class="step"><strong>步骤 1</strong>：在批量操作栏中勾选"全选"复选框</div>
+<div class="step"><strong>步骤 2</strong>：所有可见的记录都会被选中</div>
+</div>
+
+<h4>单条选择</h4>
+<div class="step-guide">
+<div class="step"><strong>步骤 1</strong>：点击某条记录前的复选框</div>
+<div class="step"><strong>步骤 2</strong>：该记录被选中，选中数量会更新</div>
+</div>
+
+<h4>批量导出</h4>
+<div class="step-guide">
+<div class="step"><strong>步骤 1</strong>：选择要导出的记录</div>
+<div class="step"><strong>步骤 2</strong>：点击 <span class="button-label">导出选中</span> 按钮</div>
+<div class="step"><strong>步骤 3</strong>：下载 JSON 文件</div>
+</div>
+
+<h4>批量删除</h4>
+<div class="step-guide">
+<div class="step"><strong>步骤 1</strong>：选择要删除的记录</div>
+<div class="step"><strong>步骤 2</strong>：点击 <span class="button-label">删除选中</span> 按钮</div>
+<div class="step"><strong>步骤 3</strong>：在确认对话框中点击"确定"</div>
+</div>
+
+<div class="success">
+<strong>✓ 成功</strong>：选中的记录被删除，显示"批量删除完成"提示。
+</div>
+</div>
+
+<h2>3. 高级功能</h2>
+
+<h3>3.1 数据备份与恢复</h3>
+
+<div class="feature-box">
+<h4>导出备份</h4>
+<p>定期导出备份可以防止数据丢失。</p>
+<div class="step-guide">
+<div class="step"><strong>步骤 1</strong>：点击工具栏中的 <span class="button-label">导出备份</span> 按钮</div>
+<div class="step"><strong>步骤 2</strong>：浏览器会下载一个 JSON 文件，文件名包含导出日期</div>
+</div>
+
+<div class="success">
+<strong>✓ 成功</strong>：备份文件已下载，显示"备份已导出"提示。
+</div>
+
+<h4>导入数据</h4>
+<p>如果浏览器数据被清除或需要在其他设备上恢复数据，可以导入备份文件。</p>
+<div class="step-guide">
+<div class="step"><strong>步骤 1</strong>：点击工具栏中的 <span class="button-label">导入</span> 按钮</div>
+<div class="step"><strong>步骤 2</strong>：选择之前导出的 JSON 文件</div>
+<div class="step"><strong>步骤 3</strong>：数据会被导入，显示导入的记录数</div>
+</div>
+
+<div class="success">
+<strong>✓ 成功</strong>：数据已导入，显示"已导入 X 条新记录"提示。
+</div>
+
+<div class="tip">
+<strong>💡 提示</strong>：
+<ul>
+<li>导入时会自动去重，相同 ID 的记录不会重复导入</li>
+<li>建议每周导出一次备份</li>
+<li>将备份文件保存在安全的地方，例如云盘或移动设备</li>
+</ul>
+</div>
+
+<div class="warning">
+<strong>⚠ 警告</strong>：备份文件包含所有账号和密码信息，请妥善保管，不要分享给他人。
+</div>
+</div>
+
+<h3>3.2 快速收藏工具（书签工具）</h3>
+
+<div class="feature-box">
+<p>快速收藏工具允许您从任意网页快速保存网站信息到信息库。</p>
+
+<h4>设置书签工具</h4>
+<div class="step-guide">
+<div class="step"><strong>步骤 1</strong>：按 <span class="keyboard">Ctrl+Shift+B</span>（Chrome/Edge）或 <span class="keyboard">Cmd+Shift+B</span>（Mac）显示浏览器书签栏</div>
+<div class="step"><strong>步骤 2</strong>：在本应用的"快速收藏工具"部分找到橙色的"📌 收藏到信息库"按钮</div>
+<div class="step"><strong>步骤 3</strong>：用鼠标按住该按钮，拖到浏览器书签栏上松开</div>
+</div>
+
+<div class="success">
+<strong>✓ 成功</strong>：书签已添加到书签栏。
+</div>
+
+<h4>使用书签工具</h4>
+<div class="step-guide">
+<div class="step"><strong>步骤 1</strong>：浏览任意网页</div>
+<div class="step"><strong>步骤 2</strong>：点击书签栏中的"📌 收藏到信息库"书签</div>
+<div class="step"><strong>步骤 3</strong>：本应用会打开，网页标题和地址已自动填入表单</div>
+<div class="step"><strong>步骤 4</strong>：填写账号和密码</div>
+<div class="step"><strong>步骤 5</strong>：点击"保存"按钮</div>
+</div>
+
+<div class="success">
+<strong>✓ 成功</strong>：网站信息已保存到信息库。
+</div>
+
+<div class="tip">
+<strong>💡 提示</strong>：整个过程只需 3 秒，非常快速方便。
+</div>
+
+<h4>示例</h4>
+<p>假设您正在浏览 GitHub 网站：</p>
+<ul>
+<li>点击书签后，应用打开</li>
+<li>网站名称自动填入："GitHub: Let's build from here"</li>
+<li>网站地址自动填入："https://github.com"</li>
+<li>您只需填写账号和密码，然后保存</li>
+</ul>
+</div>
+
+<h3>3.3 统计分析</h3>
+
+<div class="feature-box">
+<p>统计面板显示您的信息库使用情况：</p>
+
+<table>
+<tr>
+<th>指标</th>
+<th>说明</th>
+</tr>
+<tr>
+<td>总记录</td>
+<td>信息库中的总记录数</td>
+</tr>
+<tr>
+<td>今日新增</td>
+<td>今天添加的记录数</td>
+</tr>
+<tr>
+<td>本周新增</td>
+<td>过去7天添加的记录数</td>
+</tr>
+<tr>
+<td>本月新增</td>
+<td>本月添加的记录数</td>
+</tr>
+<tr>
+<td>高频关键字</td>
+<td>出现频率最高的前3个关键字及其出现次数</td>
+</tr>
+</table>
+
+<div class="tip">
+<strong>💡 提示</strong>：关键字是从网站名称和备注中自动提取的，可以帮助您了解信息库的内容分布。
+</div>
+</div>
+
+<h2>4. 数据存储与安全</h2>
+
+<div class="feature-box">
+<h3>4.1 数据存储位置</h3>
+<p>所有数据存储在浏览器的 localStorage 中，具体位置取决于您使用的浏览器：</p>
+
+<table>
+<tr>
+<th>浏览器</th>
+<th>存储路径</th>
+</tr>
+<tr>
+<td>Chrome</td>
+<td><code>%LOCALAPPDATA%\Google\Chrome\User Data\Default\Local Storage\leveldb\</code></td>
+</tr>
+<tr>
+<td>Edge</td>
+<td><code>%LOCALAPPDATA%\Microsoft\Edge\User Data\Default\Local Storage\leveldb\</code></td>
+</tr>
+<tr>
+<td>Firefox</td>
+<td><code>%APPDATA%\Mozilla\Firefox\Profiles\&lt;profile&gt;\webappsstore.sqlite</code></td>
+</tr>
+</table>
+
+<div class="warning">
+<strong>⚠ 重要</strong>：请勿清除浏览器数据或删除上述目录，否则所有信息将丢失。
+</div>
+
+<h3>4.2 安全建议</h3>
+<ul>
+<li><strong>定期备份</strong>：每周导出一次备份，保存在安全的地方</li>
+<li><strong>不在公共计算机上使用</strong>：避免在网吧、图书馆等公共场所使用此应用</li>
+<li><strong>保护浏览器安全</strong>：定期更新浏览器和操作系统</li>
+<li><strong>强密码</strong>：为重要账号设置强密码，定期更改</li>
+<li><strong>备份文件安全</strong>：将导出的备份文件保存在加密的云盘或移动设备中</li>
+</ul>
+
+<h3>4.3 隐私保护</h3>
+<p>本应用完全在本地运行，所有数据都存储在您的浏览器中：</p>
+<ul>
+<li>✓ 数据不上传到任何服务器</li>
+<li>✓ 不收集任何个人信息</li>
+<li>✓ 不使用任何第三方服务</li>
+<li>✓ 完全离线运行</li>
+</ul>
+</div>
+
+<h2>5. 常见问题</h2>
+
+<div class="feature-box">
+<h3>Q1: 如果我清除了浏览器数据怎么办？</h3>
+<p><strong>A:</strong> 如果您之前导出过备份，可以通过"导入"功能恢复数据。如果没有备份，数据将无法恢复。这就是为什么建议定期导出备份。</p>
+
+<h3>Q2: 我可以在多个浏览器中使用吗？</h3>
+<p><strong>A:</strong> 可以。每个浏览器都有独立的 localStorage，所以您需要在每个浏览器中分别导入数据。</p>
+
+<h3>Q3: 我可以在多个设备上使用吗？</h3>
+<p><strong>A:</strong> 可以。您可以在每个设备上打开 HTML 文件，然后导入备份文件来同步数据。</p>
+
+<h3>Q4: 密码是否加密存储？</h3>
+<p><strong>A:</strong> 不是。密码以明文形式存储在 localStorage 中。这就是为什么建议不要在公共计算机上使用此应用。</p>
+
+<h3>Q5: 我可以导出为其他格式吗？</h3>
+<p><strong>A:</strong> 目前只支持 JSON 格式。您可以使用其他工具将 JSON 转换为 CSV 或 Excel 格式。</p>
+
+<h3>Q6: 应用支持哪些浏览器？</h3>
+<p><strong>A:</strong> 支持所有现代浏览器，包括 Chrome、Edge、Firefox、Safari 等。不支持 Internet Explorer。</p>
+
+<h3>Q7: 我可以修改 HTML 文件吗？</h3>
+<p><strong>A:</strong> 可以，但不建议。修改可能会导致应用无法正常工作。如果您想自定义功能，建议联系开发者。</p>
+
+<h3>Q8: 应用会自动保存吗？</h3>
+<p><strong>A:</strong> 是的。每次您添加、编辑或删除记录时，应用都会自动保存到 localStorage。</p>
+</div>
+
+<h2>6. 快速参考</h2>
+
+<div class="feature-box">
+<h3>常用操作快速指南</h3>
+
+<table>
+<tr>
+<th>操作</th>
+<th>步骤</th>
+</tr>
+<tr>
+<td>添加记录</td>
+<td>点击"+ 添加" → 填写信息 → 点击"保存"</td>
+</tr>
+<tr>
+<td>编辑记录</td>
+<td>点击"编辑" → 修改信息 → 点击"保存"</td>
+</tr>
+<tr>
+<td>删除记录</td>
+<td>点击"删除" → 确认</td>
+</tr>
+<tr>
+<td>搜索记录</td>
+<td>在搜索框输入关键词</td>
+</tr>
+<tr>
+<td>按时间过滤</td>
+<td>选择下拉菜单中的时间范围</td>
+</tr>
+<tr>
+<td>显示密码</td>
+<td>点击"👁"按钮</td>
+</tr>
+<tr>
+<td>复制密码</td>
+<td>点击"复制密码"按钮</td>
+</tr>
+<tr>
+<td>导出备份</td>
+<td>点击"导出备份"按钮</td>
+</tr>
+<tr>
+<td>导入数据</td>
+<td>点击"导入" → 选择 JSON 文件</td>
+</tr>
+<tr>
+<td>批量删除</td>
+<td>选择记录 → 点击"删除选中" → 确认</td>
+</tr>
+</table>
+</div>
+
+<h2>7. 获取帮助</h2>
+
+<div class="feature-box">
+<p>如果您遇到问题或有建议，请：</p>
+<ul>
+<li>查看本文档的"常见问题"部分</li>
+<li>检查浏览器控制台是否有错误信息</li>
+<li>尝试清除浏览器缓存并重新加载页面</li>
+<li>确保您使用的是最新版本的浏览器</li>
+</ul>
+</div>
+
+</body>
+</html>

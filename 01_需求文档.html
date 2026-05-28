@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>个人重要信息库 - 需求文档</title>
+<style>
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.8; color: #333; max-width: 900px; margin: 0 auto; padding: 40px 20px; background: #f5f5f5; }
+h1 { color: #1a1a2e; border-bottom: 3px solid #7b2ff7; padding-bottom: 10px; }
+h2 { color: #16213e; margin-top: 30px; border-left: 4px solid #7b2ff7; padding-left: 15px; }
+h3 { color: #0f3460; }
+table { width: 100%; border-collapse: collapse; margin: 15px 0; background: white; }
+th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+th { background: #7b2ff7; color: white; }
+tr:nth-child(even) { background: #f9f9f9; }
+.requirement { background: #e8f4f8; padding: 15px; margin: 10px 0; border-left: 4px solid #00d2ff; border-radius: 4px; }
+.priority-high { color: #e74c3c; font-weight: bold; }
+.priority-medium { color: #f39c12; font-weight: bold; }
+.priority-low { color: #27ae60; font-weight: bold; }
+code { background: #f0f0f0; padding: 2px 6px; border-radius: 3px; font-family: 'Courier New', monospace; }
+.doc-header { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+.version-info { color: #666; font-size: 14px; }
+</style>
+</head>
+<body>
+
+<div class="doc-header">
+<h1>个人重要信息库</h1>
+<h2 style="border: none; margin: 0; padding: 0; color: #666;">需求文档</h2>
+<p class="version-info">版本: 1.0 | 日期: 2026年5月27日 | 状态: 已完成</p>
+</div>
+
+<h2>1. 项目概述</h2>
+<p>个人重要信息库是一个本地化的个人信息管理工具，用于安全地存储和管理个人重要信息，如网站地址、账号、密码等。该应用采用单文件HTML设计，数据存储在浏览器本地，确保隐私性和安全性。</p>
+
+<h2>2. 项目目标</h2>
+<ul>
+<li>提供一个简洁易用的个人信息管理界面</li>
+<li>确保数据完全本地存储，不上传到任何服务器</li>
+<li>支持数据的导入导出，便于备份和迁移</li>
+<li>提供快速收藏工具，支持从任意网页快速保存信息</li>
+<li>提供统计分析功能，帮助用户了解信息库的使用情况</li>
+</ul>
+
+<h2>3. 功能需求</h2>
+
+<h3>3.1 核心功能</h3>
+
+<div class="requirement">
+<strong>需求 FR-001: 信息录入</strong><br>
+<span class="priority-high">优先级: 高</span><br>
+用户可以添加新的信息记录，包括：
+<ul>
+<li>网站名称（必填或地址必填）</li>
+<li>网站地址（必填或名称必填）</li>
+<li>账号（可选）</li>
+<li>密码（可选）</li>
+<li>备注（可选）</li>
+<li>创建时间（自动生成）</li>
+</ul>
+</div>
+
+<div class="requirement">
+<strong>需求 FR-002: 信息查看与编辑</strong><br>
+<span class="priority-high">优先级: 高</span><br>
+<ul>
+<li>用户可以查看所有已保存的信息</li>
+<li>用户可以编辑已有的信息记录</li>
+<li>密码默认隐藏，显示为点号（••••••）</li>
+<li>用户可以点击眼睛图标切换密码显示/隐藏</li>
+</ul>
+</div>
+
+<div class="requirement">
+<strong>需求 FR-003: 信息删除</strong><br>
+<span class="priority-high">优先级: 高</span><br>
+<ul>
+<li>用户可以删除单条信息记录</li>
+<li>删除前需要确认</li>
+<li>支持批量删除选中的记录</li>
+</ul>
+</div>
+
+<div class="requirement">
+<strong>需求 FR-004: 搜索与过滤</strong><br>
+<span class="priority-high">优先级: 高</span><br>
+<ul>
+<li>支持按名称、地址、备注进行搜索</li>
+<li>支持按时间分组：全部、今天、本周、本月</li>
+<li>搜索和过滤可以组合使用</li>
+</ul>
+</div>
+
+<div class="requirement">
+<strong>需求 FR-005: 数据持久化</strong><br>
+<span class="priority-high">优先级: 高</span><br>
+<ul>
+<li>所有数据存储在浏览器 localStorage 中</li>
+<li>数据在浏览器关闭后仍然保留</li>
+<li>提供存储路径提示，警告用户不要清除浏览器数据</li>
+</ul>
+</div>
+
+<h3>3.2 高级功能</h3>
+
+<div class="requirement">
+<strong>需求 FR-006: 数据导出备份</strong><br>
+<span class="priority-high">优先级: 高</span><br>
+<ul>
+<li>用户可以导出全部数据为 JSON 文件</li>
+<li>用户可以导出选中的数据为 JSON 文件</li>
+<li>导出文件名包含导出日期</li>
+</ul>
+</div>
+
+<div class="requirement">
+<strong>需求 FR-007: 数据导入恢复</strong><br>
+<span class="priority-高">优先级: 高</span><br>
+<ul>
+<li>用户可以导入之前导出的 JSON 文件</li>
+<li>导入时自动去重（相同 ID 的记录不重复导入）</li>
+<li>导入成功后显示导入的记录数</li>
+</ul>
+</div>
+
+<div class="requirement">
+<strong>需求 FR-008: 批量操作</strong><br>
+<span class="priority-medium">优先级: 中</span><br>
+<ul>
+<li>支持全选/反选所有可见记录</li>
+<li>显示已选择的记录数</li>
+<li>支持批量导出选中记录</li>
+<li>支持批量删除选中记录</li>
+</ul>
+</div>
+
+<div class="requirement">
+<strong>需求 FR-009: 快速收藏工具（书签工具）</strong><br>
+<span class="priority-medium">优先级: 中</span><br>
+<ul>
+<li>生成可拖动的书签工具</li>
+<li>用户可以将其拖到浏览器书签栏</li>
+<li>点击书签时自动打开本应用，并填入当前网页的标题和地址</li>
+<li>用户只需填写账号和密码即可保存</li>
+</ul>
+</div>
+
+<div class="requirement">
+<strong>需求 FR-010: 统计分析</strong><br>
+<span class="priority-medium">优先级: 中</span><br>
+<ul>
+<li>显示总记录数</li>
+<li>显示今日新增记录数</li>
+<li>显示本周新增记录数</li>
+<li>显示本月新增记录数</li>
+<li>显示出现频率最高的前3个关键字及其出现次数</li>
+</ul>
+</div>
+
+<h3>3.3 用户界面需求</h3>
+
+<div class="requirement">
+<strong>需求 UI-001: 响应式设计</strong><br>
+<span class="priority-medium">优先级: 中</span><br>
+<ul>
+<li>支持桌面端（1024px 以上）</li>
+<li>支持平板端（600px - 1024px）</li>
+<li>支持手机端（600px 以下）</li>
+</ul>
+</div>
+
+<div class="requirement">
+<strong>需求 UI-002: 深色主题</strong><br>
+<span class="priority-低">优先级: 低</span><br>
+<ul>
+<li>采用深色主题设计，保护用户视力</li>
+<li>使用渐变色和高对比度提升视觉效果</li>
+</ul>
+</div>
+
+<div class="requirement">
+<strong>需求 UI-003: 用户反馈</strong><br>
+<span class="priority-medium">优先级: 中</span><br>
+<ul>
+<li>操作成功时显示 Toast 提示</li>
+<li>操作失败时显示错误提示</li>
+<li>提示自动消失</li>
+</ul>
+</div>
+
+<h2>4. 非功能需求</h2>
+
+<table>
+<tr>
+<th>需求类别</th>
+<th>具体要求</th>
+</tr>
+<tr>
+<td>安全性</td>
+<td>数据完全本地存储，不涉及网络传输；密码默认隐藏显示</td>
+</tr>
+<tr>
+<td>性能</td>
+<td>页面加载时间 < 1 秒；操作响应时间 < 200ms</td>
+</tr>
+<tr>
+<td>可用性</td>
+<td>界面直观易用，无需用户手册即可上手</td>
+</tr>
+<tr>
+<td>兼容性</td>
+<td>支持 Chrome、Edge、Firefox 等现代浏览器</td>
+</tr>
+<tr>
+<td>可维护性</td>
+<td>单文件设计，易于部署和维护</td>
+</tr>
+</table>
+
+<h2>5. 数据结构</h2>
+
+<h3>5.1 信息记录结构</h3>
+<pre style="background: #f0f0f0; padding: 15px; border-radius: 4px; overflow-x: auto;">
+{
+  id: string,              // 唯一标识符（时间戳）
+  name: string,            // 网站名称
+  url: string,             // 网站地址
+  user: string,            // 账号
+  pass: string,            // 密码
+  note: string,            // 备注
+  createdAt: ISO8601       // 创建时间
+}
+</pre>
+
+<h2>6. 使用场景</h2>
+
+<h3>场景 1: 保存新网站信息</h3>
+<ol>
+<li>用户点击"+ 添加"按钮</li>
+<li>填写网站名称、地址、账号、密码等信息</li>
+<li>点击"保存"按钮</li>
+<li>信息被添加到列表中，显示创建时间</li>
+</ol>
+
+<h3>场景 2: 快速收藏网站</h3>
+<ol>
+<li>用户将"收藏到信息库"书签拖到浏览器书签栏</li>
+<li>浏览网页时，点击书签</li>
+<li>自动打开信息库，网页标题和地址已自动填入</li>
+<li>用户填写账号密码后保存</li>
+</ol>
+
+<h3>场景 3: 查找信息</h3>
+<ol>
+<li>用户在搜索框输入关键词</li>
+<li>列表自动过滤显示匹配的记录</li>
+<li>用户可以选择时间范围进一步过滤</li>
+</ol>
+
+<h3>场景 4: 数据备份与恢复</h3>
+<ol>
+<li>用户定期点击"导出备份"下载数据</li>
+<li>如果浏览器数据被清除，用户可以点击"导入"恢复数据</li>
+</ol>
+
+<h2>7. 验收标准</h2>
+
+<table>
+<tr>
+<th>功能</th>
+<th>验收标准</th>
+</tr>
+<tr>
+<td>信息录入</td>
+<td>能成功添加包含所有字段的记录，数据正确保存</td>
+</tr>
+<tr>
+<td>信息查看</td>
+<td>所有记录正确显示，密码默认隐藏</td>
+</tr>
+<tr>
+<td>搜索过滤</td>
+<td>搜索结果准确，时间过滤正确</td>
+</tr>
+<tr>
+<td>数据持久化</td>
+<td>关闭浏览器后数据仍然存在</td>
+</tr>
+<tr>
+<td>导出导入</td>
+<td>导出的数据能正确导入，无数据丢失</td>
+</tr>
+<tr>
+<td>书签工具</td>
+<td>能正确获取网页标题和地址，自动填入表单</td>
+</tr>
+<tr>
+<td>统计分析</td>
+<td>统计数据准确，关键字提取正确</td>
+</tr>
+</table>
+
+<h2>8. 约束条件</h2>
+
+<ul>
+<li>单文件 HTML 应用，无需后端服务</li>
+<li>数据存储在浏览器 localStorage，容量限制约 5-10MB</li>
+<li>不支持跨浏览器数据同步</li>
+<li>不支持多用户管理</li>
+<li>不支持数据加密存储（用户需自行保护浏览器安全）</li>
+</ul>
+
+</body>
+</html>

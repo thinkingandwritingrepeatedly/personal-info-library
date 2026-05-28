@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>个人重要信息库</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  min-height: 100vh;
+  color: #e0e0e0;
+  padding: 20px;
+}
+.container { max-width: 960px; margin: 0 auto; }
+h1 {
+  text-align: center;
+  margin-bottom: 8px;
+  font-size: 2em;
+  background: linear-gradient(90deg, #00d2ff, #7b2ff7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.storage-notice {
+  text-align: center;
+  font-size: 12px;
+  color: #e74c3c;
+  margin-bottom: 20px;
+  padding: 8px;
+  background: rgba(231,76,60,0.1);
+  border: 1px solid rgba(231,76,60,0.3);
+  border-radius: 6px;
+}
+.storage-notice code { background: #2a2a3e; padding: 2px 6px; border-radius: 3px; color: #ff6b6b; }
+.toolbar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.toolbar input[type="text"] {
+  flex: 1;
+  min-width: 180px;
+  padding: 10px 16px;
+  border: 1px solid #333;
+  border-radius: 8px;
+  background: #1e1e2e;
+  color: #e0e0e0;
+  font-size: 14px;
+}
+.toolbar input[type="text"]:focus { outline: none; border-color: #7b2ff7; }
+.toolbar select {
+  padding: 10px 12px;
+  border: 1px solid #333;
+  border-radius: 8px;
+  background: #1e1e2e;
+  color: #e0e0e0;
+  font-size: 14px;
+}
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.btn-primary { background: linear-gradient(135deg, #7b2ff7, #00d2ff); color: #fff; }
+.btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+.btn-secondary { background: #2a2a3e; color: #e0e0e0; border: 1px solid #444; }
+.btn-secondary:hover { background: #3a3a4e; }
+.btn-danger { background: #e74c3c; color: #fff; }
+.btn-danger:hover { background: #c0392b; }
+.btn-small { padding: 6px 12px; font-size: 12px; }
+
+.batch-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  background: #1e1e2e;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  border: 1px solid #2a2a3e;
+}
+.check-all-label { display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer; }
+.check-all-label input { cursor: pointer; }
+#selectedCount { font-size: 13px; color: #888; margin-right: auto; }
+
+.form-card {
+  background: #1e1e2e;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 16px;
+  border: 1px solid #2a2a3e;
+  display: none;
+}
+.form-card.active { display: block; }
+.form-card .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.form-card .form-row.full { grid-template-columns: 1fr; }
+.form-card label { display: block; margin-bottom: 4px; font-size: 12px; color: #888; }
+.form-card input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #333;
+  border-radius: 6px;
+  background: #16162e;
+  color: #e0e0e0;
+  font-size: 14px;
+}
+.form-card input:focus { outline: none; border-color: #7b2ff7; }
+.form-card textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #333;
+  border-radius: 6px;
+  background: #16162e;
+  color: #e0e0e0;
+  font-size: 14px;
+  font-family: inherit;
+  resize: vertical;
+}
+.form-card textarea:focus { outline: none; border-color: #7b2ff7; }
+.form-actions { display: flex; gap: 10px; margin-top: 16px; }
+
+.entries { display: flex; flex-direction: column; gap: 8px; }
+.entry {
+  background: #1e1e2e;
+  border-radius: 10px;
+  padding: 14px 18px;
+  border: 1px solid #2a2a3e;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+  transition: border-color 0.2s;
+}
+.entry:hover { border-color: #7b2ff7; }
+.entry-check { cursor: pointer; }
+.entry-info { overflow: hidden; }
+.entry-title { font-weight: 600; font-size: 15px; margin-bottom: 3px; color: #fff; }
+.entry-url { font-size: 12px; color: #7b8ab8; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.entry-url a { color: #00d2ff; text-decoration: none; }
+.entry-url a:hover { text-decoration: underline; }
+.entry-creds { display: flex; gap: 16px; font-size: 13px; flex-wrap: wrap; }
+.entry-creds span { color: #aaa; }
+.entry-creds .label { color: #666; margin-right: 4px; }
+.entry-time { font-size: 11px; color: #555; margin-top: 4px; }
+.pwd-hidden { font-family: monospace; letter-spacing: 2px; }
+.entry-actions { display: flex; gap: 6px; flex-shrink: 0; flex-wrap: wrap; }
+
+.bookmarklet-section {
+  margin-top: 40px;
+  padding: 24px;
+  background: #1e1e2e;
+  border-radius: 12px;
+  border: 1px solid #2a2a3e;
+}
+.bookmarklet-section h3 { margin-bottom: 10px; color: #fff; }
+.bookmarklet-section p { font-size: 13px; color: #aaa; margin-bottom: 12px; }
+.bookmarklet-btn {
+  display: inline-block;
+  padding: 10px 24px;
+  background: linear-gradient(135deg, #f39c12, #e74c3c);
+  color: #fff;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: grab;
+}
+.bookmarklet-tip { margin-top: 12px; font-size: 12px; color: #666; }
+
+.stats-panel {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 14px;
+  padding: 14px 20px;
+  background: #1e1e2e;
+  border-radius: 10px;
+  border: 1px solid #2a2a3e;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.stat-item { display: flex; flex-direction: column; align-items: center; min-width: 70px; }
+.stat-num { font-size: 22px; font-weight: 700; color: #00d2ff; }
+.stat-label { font-size: 11px; color: #888; margin-top: 2px; }
+.stat-keywords { margin-left: auto; font-size: 13px; }
+.stat-keywords .stat-label { margin-right: 6px; }
+#statKeywords { color: #f39c12; }
+
+.bookmarklet-steps { margin: 16px 0; }
+.step { display: flex; gap: 12px; margin-bottom: 14px; align-items: flex-start; }
+.step-num {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: linear-gradient(135deg, #7b2ff7, #00d2ff);
+  color: #fff; font-weight: 700; font-size: 14px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.step-content { font-size: 14px; color: #ccc; line-height: 1.6; }
+.step-content strong { color: #fff; }
+.step-content kbd {
+  background: #333; padding: 2px 6px; border-radius: 4px;
+  font-size: 12px; border: 1px solid #555; color: #eee;
+}
+.step-demo { margin-top: 8px; }
+.demo-bar {
+  display: inline-block;
+  background: #2a2a3e; padding: 6px 14px; border-radius: 4px;
+  font-size: 12px; color: #aaa; border: 1px solid #444;
+}
+.demo-highlight { color: #f39c12; font-weight: 600; }
+.bookmarklet-drag-area { text-align: center; margin: 20px 0; }
+.bookmarklet-drag-area p { font-size: 12px; color: #888; margin-bottom: 8px; }
+.bookmarklet-example { margin-top: 20px; padding-top: 20px; border-top: 1px solid #333; }
+.bookmarklet-example h4 { color: #fff; margin-bottom: 10px; font-size: 14px; }
+.bookmarklet-example p { font-size: 13px; color: #aaa; margin-bottom: 10px; }
+.bookmarklet-example code { background: #2a2a3e; padding: 2px 6px; border-radius: 3px; color: #00d2ff; }
+.example-result {
+  background: #16162e; border-radius: 8px; padding: 14px 18px;
+  border: 1px dashed #444; margin: 10px 0;
+}
+.example-row { margin-bottom: 6px; font-size: 13px; }
+.example-label { color: #888; }
+.example-row span:last-child { color: #e0e0e0; }
+.example-empty { color: #555; font-style: italic; }
+
+.note-content { white-space: pre-wrap; word-break: break-word; line-height: 1.5; }
+.note-content strong { color: #fff; font-weight: 600; }
+.note-content em { color: #aaa; font-style: italic; }
+.note-content code { background: #2a2a3e; padding: 2px 6px; border-radius: 3px; color: #00d2ff; font-family: monospace; font-size: 12px; }
+.note-content a { color: #00d2ff; text-decoration: none; }
+.note-content a:hover { text-decoration: underline; }
+
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: #2ecc71;
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  opacity: 0;
+  transition: all 0.3s;
+  z-index: 999;
+}
+.toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+.empty-state { text-align: center; padding: 60px 20px; color: #555; font-size: 16px; }
+
+@media (max-width: 600px) {
+  .form-card .form-row { grid-template-columns: 1fr; }
+  .entry { grid-template-columns: auto 1fr; }
+  .entry-actions { grid-column: 1 / -1; justify-content: flex-end; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>个人重要信息库</h1>
+  <div class="storage-notice">
+    数据存储于浏览器 localStorage，路径：<code id="storagePath"></code><br>
+    请勿清除浏览器数据或删除该目录，否则信息将丢失。建议定期使用「导出备份」功能。
+  </div>
+
+  <div class="toolbar">
+    <input type="text" id="searchInput" placeholder="搜索名称、地址、备注...">
+    <select id="groupSelect"><option value="all">全部</option><option value="today">今天</option><option value="week">本周</option><option value="month">本月</option></select>
+    <button class="btn btn-primary" onclick="showForm()">+ 添加</button>
+    <button class="btn btn-secondary" onclick="pasteFromClipboard()" title="从剪贴板粘贴收藏的网页信息">📋 粘贴</button>
+    <button class="btn btn-secondary" onclick="exportData()">导出备份</button>
+    <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">导入</button>
+    <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+  </div>
+
+  <div class="stats-panel" id="statsPanel">
+    <div class="stat-item"><span class="stat-num" id="statTotal">0</span><span class="stat-label">总记录</span></div>
+    <div class="stat-item"><span class="stat-num" id="statToday">0</span><span class="stat-label">今日新增</span></div>
+    <div class="stat-item"><span class="stat-num" id="statWeek">0</span><span class="stat-label">本周新增</span></div>
+    <div class="stat-item"><span class="stat-num" id="statMonth">0</span><span class="stat-label">本月新增</span></div>
+    <div class="stat-keywords"><span class="stat-label">高频关键字：</span><span id="statKeywords">-</span></div>
+  </div>
+
+  <div class="batch-bar" id="batchBar">
+    <label class="check-all-label"><input type="checkbox" id="checkAll" onchange="toggleAll()"> 全选</label>
+    <span id="selectedCount">已选 0 条</span>
+    <button class="btn btn-secondary btn-small" onclick="batchExport()">导出选中</button>
+    <button class="btn btn-danger btn-small" onclick="batchDelete()">删除选中</button>
+  </div>
+
+  <div class="form-card" id="formCard">
+    <div class="form-row">
+      <div><label>网站名称</label><input id="fName" placeholder="例：GitHub"></div>
+      <div><label>网站地址</label><input id="fUrl" placeholder="https://github.com"></div>
+    </div>
+    <div class="form-row">
+      <div><label>账号</label><input id="fUser" placeholder="用户名或邮箱"></div>
+      <div><label>密码</label><input id="fPass" placeholder="密码"></div>
+    </div>
+    <div class="form-row full">
+      <div><label>备注</label><textarea id="fNote" placeholder="可选备注信息，支持换行和 Markdown 格式（**粗体** *斜体* `代码` [链接](url)）" rows="4"></textarea></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="saveEntry()">保存</button>
+      <button class="btn btn-secondary" onclick="hideForm()">取消</button>
+    </div>
+  </div>
+
+  <div class="entries" id="entries"></div>
+
+  <div class="bookmarklet-section">
+    <h3>快速收藏工具 - 使用教程</h3>
+    <div class="bookmarklet-steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <strong>显示书签栏</strong>：按 <kbd>Ctrl+Shift+B</kbd>（Chrome/Edge）显示浏览器书签栏
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <strong>拖动按钮到书签栏</strong>：用鼠标按住下方橙色按钮，拖到书签栏上松开
+          <div class="step-demo">
+            <span class="demo-bar">☆ 书签栏 &nbsp;|&nbsp; 百度 &nbsp;|&nbsp; GitHub &nbsp;|&nbsp; <span class="demo-highlight">📌 收藏到信息库</span></span>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <strong>在任意网页使用</strong>：浏览网页时点击书签栏中的「收藏到信息库」，网页标题和地址会被复制到剪贴板
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <strong>打开信息库粘贴</strong>：回到本页面，点击工具栏的「📋 粘贴」按钮，信息自动填入表单
+        </div>
+      </div>
+    </div>
+    <div class="bookmarklet-drag-area">
+      <p>↓ 拖动此按钮到书签栏 ↓</p>
+      <a class="bookmarklet-btn" id="bookmarkletLink" href="#">📌 收藏到信息库</a>
+    </div>
+    <div class="bookmarklet-example">
+      <h4>示例场景</h4>
+      <p>假设你正在浏览 <code>https://github.com</code>，点击书签栏的「收藏到信息库」后：</p>
+      <p style="font-size:13px;color:#aaa;margin:8px 0;">页面右上角会提示"已复制到剪贴板"，然后回到本页点击「📋 粘贴」：</p>
+      <div class="example-result">
+        <div class="example-row"><span class="example-label">网站名称：</span><span>GitHub: Let's build from here</span></div>
+        <div class="example-row"><span class="example-label">网站地址：</span><span>https://github.com</span></div>
+        <div class="example-row"><span class="example-label">账号：</span><span class="example-empty">（等你手动填写）</span></div>
+        <div class="example-row"><span class="example-label">密码：</span><span class="example-empty">（等你手动填写）</span></div>
+      </div>
+      <p class="bookmarklet-tip">填完账号密码后点「保存」即可。整个过程只需 3 秒。</p>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+let entries = JSON.parse(localStorage.getItem('pwd_entries') || '[]');
+let editingId = null;
+let selected = new Set();
+
+function save() {
+  try { localStorage.setItem('pwd_entries', JSON.stringify(entries)); }
+  catch(e) { toast('存储失败，请检查浏览器设置'); }
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+function showForm(name, url) {
+  editingId = null;
+  clearForm();
+  if (name) document.getElementById('fName').value = name;
+  if (url) document.getElementById('fUrl').value = url;
+  document.getElementById('formCard').classList.add('active');
+  document.getElementById(name ? 'fUser' : 'fName').focus();
+}
+
+function hideForm() {
+  document.getElementById('formCard').classList.remove('active');
+  clearForm();
+}
+
+function editEntry(id) {
+  const entry = entries.find(e => e.id === id);
+  if (!entry) return;
+  editingId = entry.id;
+  document.getElementById('fName').value = entry.name;
+  document.getElementById('fUrl').value = entry.url;
+  document.getElementById('fUser').value = entry.user;
+  document.getElementById('fPass').value = entry.pass;
+  document.getElementById('fNote').value = entry.note || '';
+  document.getElementById('formCard').classList.add('active');
+  document.getElementById('formCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function clearForm() {
+  editingId = null;
+  ['fName','fUrl','fUser','fPass','fNote'].forEach(id => document.getElementById(id).value = '');
+}
+
+function saveEntry() {
+  const name = document.getElementById('fName').value.trim();
+  const url = document.getElementById('fUrl').value.trim();
+  const user = document.getElementById('fUser').value.trim();
+  const pass = document.getElementById('fPass').value.trim();
+  const note = document.getElementById('fNote').value.trim();
+  if (!name && !url) { toast('请至少填写名称或地址'); return; }
+  const isEdit = !!editingId;
+  if (isEdit) {
+    const idx = entries.findIndex(e => e.id === editingId);
+    if (idx !== -1) entries[idx] = { ...entries[idx], name, url, user, pass, note };
+  } else {
+    entries.unshift({ id: Date.now().toString(), name, url, user, pass, note, createdAt: new Date().toISOString() });
+  }
+  save();
+  hideForm();
+  render();
+  toast(isEdit ? '已更新' : '已添加');
+}
+
+function deleteEntry(id) {
+  if (!confirm('确定删除这条记录？')) return;
+  entries = entries.filter(e => e.id !== id);
+  selected.delete(id);
+  save();
+  render();
+  toast('已删除');
+}
+
+function copyField(id, field) {
+  const entry = entries.find(e => e.id === id);
+  if (!entry) return;
+  navigator.clipboard.writeText(entry[field]).then(() => toast('已复制到剪贴板'));
+}
+
+function togglePwd(id) {
+  const el = document.getElementById('pwd-' + id);
+  const entry = entries.find(e => e.id === id);
+  if (!el || !entry) return;
+  if (el.textContent === '••••••') el.textContent = entry.pass;
+  else el.textContent = '••••••';
+}
+
+function toggleSelect(id) {
+  if (selected.has(id)) selected.delete(id);
+  else selected.add(id);
+  updateBatchBar();
+}
+
+function toggleAll() {
+  const all = document.getElementById('checkAll').checked;
+  const visible = getFiltered();
+  if (all) visible.forEach(e => selected.add(e.id));
+  else visible.forEach(e => selected.delete(e.id));
+  render();
+}
+
+function updateBatchBar() {
+  document.getElementById('selectedCount').textContent = `已选 ${selected.size} 条`;
+  document.getElementById('checkAll').checked = selected.size > 0 && selected.size === getFiltered().length;
+}
+
+function batchExport() {
+  if (selected.size === 0) { toast('请先选择条目'); return; }
+  const data = entries.filter(e => selected.has(e.id));
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'info_export_' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+  toast(`已导出 ${data.length} 条`);
+}
+
+function batchDelete() {
+  if (selected.size === 0) { toast('请先选择条目'); return; }
+  if (!confirm(`确定删除选中的 ${selected.size} 条记录？`)) return;
+  entries = entries.filter(e => !selected.has(e.id));
+  selected.clear();
+  save();
+  render();
+  toast('批量删除完成');
+}
+
+function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+function parseMarkdown(text) {
+  if (!text) return '';
+  text = esc(text);
+  text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  text = text.replace(/\*(.+?)\*/g, '<em>$1</em>');
+  text = text.replace(/`(.+?)`/g, '<code>$1</code>');
+  text = text.replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" target="_blank">$1</a>');
+  return text;
+}
+
+function formatTime(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  return d.toLocaleString('zh-CN', { year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit' });
+}
+
+function getFiltered() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  const group = document.getElementById('groupSelect').value;
+  const now = new Date();
+  return entries.filter(e => {
+    const matchQ = e.name.toLowerCase().includes(q) || e.url.toLowerCase().includes(q) || (e.note||'').toLowerCase().includes(q);
+    if (!matchQ) return false;
+    if (group === 'all') return true;
+    if (!e.createdAt) return group === 'all';
+    const created = new Date(e.createdAt);
+    if (group === 'today') return created.toDateString() === now.toDateString();
+    if (group === 'week') return (now - created) < 7 * 86400000;
+    if (group === 'month') return created.getMonth() === now.getMonth() && created.getFullYear() === now.getFullYear();
+    return true;
+  });
+}
+
+function updateStats() {
+  const now = new Date();
+  let today = 0, week = 0, month = 0;
+  entries.forEach(e => {
+    if (!e.createdAt) return;
+    const d = new Date(e.createdAt);
+    if (d.toDateString() === now.toDateString()) today++;
+    if ((now - d) < 7 * 86400000) week++;
+    if (d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear()) month++;
+  });
+  document.getElementById('statTotal').textContent = entries.length;
+  document.getElementById('statToday').textContent = today;
+  document.getElementById('statWeek').textContent = week;
+  document.getElementById('statMonth').textContent = month;
+
+  const words = {};
+  entries.forEach(e => {
+    [e.name, e.note || ''].join(' ').split(/[\s,./\\:：，、\-_]+/).forEach(w => {
+      w = w.toLowerCase().trim();
+      if (w && w.length >= 2 && !/^https?$/.test(w) && !/^\d+$/.test(w)) words[w] = (words[w] || 0) + 1;
+    });
+  });
+  const top3 = Object.entries(words).sort((a, b) => b[1] - a[1]).slice(0, 3);
+  document.getElementById('statKeywords').textContent = top3.length ? top3.map(([k, v]) => `${k}(${v})`).join('  ') : '-';
+}
+
+function render() {
+  const filtered = getFiltered();
+  const container = document.getElementById('entries');
+  updateBatchBar();
+  updateStats();
+  if (filtered.length === 0) {
+    container.innerHTML = '<div class="empty-state">' + (entries.length === 0 ? '还没有记录，点击上方 "+ 添加" 开始' : '没有匹配的结果') + '</div>';
+    return;
+  }
+  container.innerHTML = filtered.map(e => `
+    <div class="entry" data-id="${e.id}">
+      <input type="checkbox" class="entry-check" data-action="select" data-id="${e.id}" ${selected.has(e.id) ? 'checked' : ''}>
+      <div class="entry-info">
+        <div class="entry-title">${esc(e.name || '未命名')}</div>
+        ${e.url ? `<div class="entry-url"><a href="${esc(e.url)}" target="_blank">${esc(e.url)}</a></div>` : ''}
+        <div class="entry-creds">
+          ${e.user ? `<span><span class="label">账号:</span>${esc(e.user)}</span>` : ''}
+          ${e.pass ? `<span><span class="label">密码:</span><span class="pwd-hidden" id="pwd-${e.id}">••••••</span></span>` : ''}
+        </div>
+        ${e.note ? `<div class="note-content" style="margin-top:8px;color:#aaa;font-size:13px;">${parseMarkdown(e.note)}</div>` : ''}
+        <div class="entry-time">${formatTime(e.createdAt)}</div>
+      </div>
+      <div class="entry-actions">
+        ${e.pass ? `<button class="btn btn-secondary btn-small" data-action="togglePwd" data-id="${e.id}">👁</button>` : ''}
+        ${e.user ? `<button class="btn btn-secondary btn-small" data-action="copy" data-id="${e.id}" data-field="user">复制账号</button>` : ''}
+        ${e.pass ? `<button class="btn btn-secondary btn-small" data-action="copy" data-id="${e.id}" data-field="pass">复制密码</button>` : ''}
+        <button class="btn btn-secondary btn-small" data-action="edit" data-id="${e.id}">编辑</button>
+        <button class="btn btn-danger btn-small" data-action="delete" data-id="${e.id}">删除</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+document.getElementById('entries').addEventListener('click', function(ev) {
+  const btn = ev.target.closest('[data-action]');
+  if (!btn) return;
+  const action = btn.dataset.action;
+  const id = btn.dataset.id;
+  if (action === 'edit') editEntry(id);
+  else if (action === 'delete') deleteEntry(id);
+  else if (action === 'copy') copyField(id, btn.dataset.field);
+  else if (action === 'togglePwd') togglePwd(id);
+  else if (action === 'select') toggleSelect(id);
+});
+
+document.getElementById('searchInput').addEventListener('input', render);
+document.getElementById('groupSelect').addEventListener('change', render);
+
+function exportData() {
+  const blob = new Blob([JSON.stringify(entries, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'info_backup_' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+  toast('备份已导出');
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    try {
+      const data = JSON.parse(ev.target.result);
+      if (!Array.isArray(data)) throw new Error();
+      let added = 0;
+      data.forEach(item => {
+        if (!item.createdAt) item.createdAt = new Date().toISOString();
+        if (!entries.find(ex => ex.id === item.id)) { entries.unshift(item); added++; }
+      });
+      save();
+      render();
+      toast(`已导入 ${added} 条新记录`);
+    } catch(e) { toast('文件格式错误'); }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+function pasteFromClipboard() {
+  navigator.clipboard.readText().then(text => {
+    try {
+      const data = JSON.parse(text);
+      if (data && data.infoLib && (data.name || data.url)) {
+        showForm(data.name || '', data.url || '');
+        toast('已从剪贴板填入');
+      } else {
+        toast('剪贴板中没有收藏数据，请先在网页上点击书签');
+      }
+    } catch(e) {
+      toast('剪贴板中没有收藏数据，请先在网页上点击书签');
+    }
+  }).catch(() => {
+    toast('无法读取剪贴板，请允许剪贴板权限');
+  });
+}
+
+function detectStoragePath() {
+  const ua = navigator.userAgent;
+  let path = '';
+  if (ua.includes('Edg/')) path = '%LOCALAPPDATA%\\Microsoft\\Edge\\User Data\\Default\\Local Storage\\leveldb\\';
+  else if (ua.includes('Chrome/')) path = '%LOCALAPPDATA%\\Google\\Chrome\\User Data\\Default\\Local Storage\\leveldb\\';
+  else if (ua.includes('Firefox/')) path = '%APPDATA%\\Mozilla\\Firefox\\Profiles\\<profile>\\webappsstore.sqlite';
+  else path = '浏览器配置目录/Local Storage/';
+  document.getElementById('storagePath').textContent = path;
+}
+
+function setupBookmarklet() {
+  const code = `javascript:void(navigator.clipboard.writeText(JSON.stringify({infoLib:true,name:document.title,url:location.href})).then(()=>{const d=document.createElement('div');d.textContent='\\u2705 已复制到剪贴板，请打开信息库粘贴';d.style.cssText='position:fixed;top:20px;right:20px;background:#2ecc71;color:#fff;padding:12px 20px;border-radius:8px;font-size:14px;z-index:999999;box-shadow:0 4px 12px rgba(0,0,0,0.3)';document.body.appendChild(d);setTimeout(()=>d.remove(),2500)}))`;
+  document.getElementById('bookmarkletLink').href = code;
+}
+
+function checkAutoFill() {
+  const params = new URLSearchParams(location.search);
+  const name = params.get('autoName');
+  const url = params.get('autoUrl');
+  if (name || url) {
+    history.replaceState(null, '', location.pathname);
+    showForm(name || '', url || '');
+  }
+}
+
+detectStoragePath();
+setupBookmarklet();
+checkAutoFill();
+render();
+</script></body>
+</html>
