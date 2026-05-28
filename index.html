@@ -159,10 +159,8 @@ h1 {
 .entry-actions { display: flex; gap: 6px; flex-shrink: 0; flex-wrap: wrap; }
 
 .bookmarklet-section {
-  margin-top: 40px;
   padding: 24px;
   background: #1e1e2e;
-  border-radius: 12px;
   border: 1px solid #2a2a3e;
 }
 .bookmarklet-section h3 { margin-bottom: 10px; color: #fff; }
@@ -241,6 +239,48 @@ h1 {
 .note-content a { color: #00d2ff; text-decoration: none; }
 .note-content a:hover { text-decoration: underline; }
 
+details.bookmarklet-details {
+  margin-top: 40px;
+}
+
+summary.bookmarklet-summary {
+  cursor: pointer;
+  padding: 16px 20px;
+  background: #1e1e2e;
+  border: 1px solid #2a2a3e;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  user-select: none;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+}
+
+summary.bookmarklet-summary:hover {
+  border-color: #7b2ff7;
+  background: #252540;
+}
+
+summary.bookmarklet-summary::marker {
+  color: #7b2ff7;
+}
+
+details[open] > summary.bookmarklet-summary {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom: 1px solid #2a2a3e;
+}
+
+.bookmarklet-section {
+  background: #1e1e2e;
+  border: 1px solid #2a2a3e;
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+  padding: 24px;
+}
+
 .toast {
   position: fixed;
   bottom: 30px;
@@ -318,9 +358,10 @@ h1 {
 
   <div class="entries" id="entries"></div>
 
-  <div class="bookmarklet-section">
-    <h3>快速收藏工具 - 使用教程</h3>
-    <div class="bookmarklet-steps">
+  <details class="bookmarklet-details">
+    <summary class="bookmarklet-summary">📌 快速收藏工具 - 使用教程</summary>
+    <div class="bookmarklet-section">
+      <div class="bookmarklet-steps">
       <div class="step">
         <div class="step-num">1</div>
         <div class="step-content">
@@ -366,6 +407,7 @@ h1 {
       <p class="bookmarklet-tip">填完账号密码后点「保存」即可。整个过程只需 3 秒。</p>
     </div>
   </div>
+  </details>
 </div>
 <div class="toast" id="toast"></div>
 
