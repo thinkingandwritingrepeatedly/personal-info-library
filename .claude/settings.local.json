@@ -5,7 +5,12 @@
       "Bash(mv \"/d/项目/test1\" \"/d/项目/个人重要信息库\")",
       "Bash(git init *)",
       "Bash(git add *)",
-      "Bash(git commit -m 'Initial commit: Personal Information Library - password manager *)"
+      "Bash(git commit -m 'Initial commit: Personal Information Library - password manager *)",
+      "Bash(gh repo *)",
+      "Bash(git remote *)",
+      "Bash(git branch *)",
+      "Bash(git push *)",
+      "Bash(chmod +x .git/hooks/post-commit)"
     ]
   }
 }
