@@ -73,8 +73,8 @@ h1 {
 .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
 .btn-secondary { background: #2a2a3e; color: #e0e0e0; border: 1px solid #444; }
 .btn-secondary:hover { background: #3a3a4e; }
-.btn-danger { background: #e74c3c; color: #fff; }
-.btn-danger:hover { background: #c0392b; }
+.btn-danger { background: #2a2a3e; color: #e0e0e0; border: 1px solid #444; }
+.btn-danger:hover { background: #3a3a4e; }
 .btn-small { padding: 6px 12px; font-size: 12px; }
 
 .batch-bar {
@@ -308,11 +308,6 @@ details[open] > summary.bookmarklet-summary {
 <body>
 <div class="container">
   <h1>个人重要信息库</h1>
-  <div class="storage-notice">
-    数据存储于浏览器 localStorage，路径：<code id="storagePath"></code><br>
-    请勿清除浏览器数据或删除该目录，否则信息将丢失。建议定期使用「导出备份」功能。
-  </div>
-
   <div class="toolbar">
     <input type="text" id="searchInput" placeholder="搜索名称、地址、备注...">
     <select id="groupSelect"><option value="all">全部</option><option value="today">今天</option><option value="week">本周</option><option value="month">本月</option></select>
@@ -408,6 +403,11 @@ details[open] > summary.bookmarklet-summary {
     </div>
   </div>
   </details>
+
+  <div class="storage-notice" style="margin-top: 20px;">
+    数据存储于浏览器 localStorage，路径：<code id="storagePath"></code><br>
+    请勿清除浏览器数据或删除该目录，否则信息将丢失。建议定期使用「导出备份」功能。
+  </div>
 </div>
 <div class="toast" id="toast"></div>
 
