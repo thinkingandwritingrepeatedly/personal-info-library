@@ -416,20 +416,41 @@ details[open] > summary.bookmarklet-summary {
   </details>
 
   <div class="storage-notice" style="margin-top: 20px;">
-    数据存储于浏览器 localStorage，路径：<code id="storagePath"></code><br>
-    请勿清除浏览器数据或删除该目录，否则信息将丢失。建议定期使用「导出备份」功能。
+    数据存储于本地文件：<code id="storagePath"></code> — 请勿手动修改该文件，否则数据可能丢失。建议定期使用「导出备份」功能。
   </div>
 </div>
 <div class="toast" id="toast"></div>
 
 <script>
-let entries = JSON.parse(localStorage.getItem('pwd_entries') || '[]');
+let entries = [];
 let editingId = null;
 let selected = new Set();
 
-function save() {
-  try { localStorage.setItem('pwd_entries', JSON.stringify(entries)); }
-  catch(e) { toast('存储失败，请检查浏览器设置'); }
+async function loadData() {
+  try {
+    const res = await fetch('/api/data');
+    if (res.ok) {
+      entries = await res.json();
+    } else {
+      toast('数据加载失败');
+    }
+  } catch (e) {
+    toast('无法连接到数据服务，请确保服务已启动 (server.js)');
+  }
+  render();
+}
+
+async function save() {
+  try {
+    const res = await fetch('/api/data', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(entries)
+    });
+    if (!res.ok) throw new Error('保存请求失败');
+  } catch (e) {
+    toast('保存失败，请检查数据服务是否运行');
+  }
 }
 
 function toast(msg) {
@@ -471,7 +492,7 @@ function clearForm() {
   ['fName','fUrl','fUser','fPass','fNote'].forEach(id => document.getElementById(id).value = '');
 }
 
-function saveEntry() {
+async function saveEntry() {
   const name = document.getElementById('fName').value.trim();
   const url = document.getElementById('fUrl').value.trim();
   const user = document.getElementById('fUser').value.trim();
@@ -485,17 +506,17 @@ function saveEntry() {
   } else {
     entries.unshift({ id: Date.now().toString(), name, url, user, pass, note, createdAt: new Date().toISOString() });
   }
-  save();
+  await save();
   hideForm();
   render();
   toast(isEdit ? '已更新' : '已添加');
 }
 
-function deleteEntry(id) {
+async function deleteEntry(id) {
   if (!confirm('确定删除这条记录？')) return;
   entries = entries.filter(e => e.id !== id);
   selected.delete(id);
-  save();
+  await save();
   render();
   toast('已删除');
 }
@@ -544,12 +565,12 @@ function batchExport() {
   toast(`已导出 ${data.length} 条`);
 }
 
-function batchDelete() {
+async function batchDelete() {
   if (selected.size === 0) { toast('请先选择条目'); return; }
   if (!confirm(`确定删除选中的 ${selected.size} 条记录？`)) return;
   entries = entries.filter(e => !selected.has(e.id));
   selected.clear();
-  save();
+  await save();
   render();
   toast('批量删除完成');
 }
@@ -676,7 +697,7 @@ function importData(event) {
   const file = event.target.files[0];
   if (!file) return;
   const reader = new FileReader();
-  reader.onload = function(ev) {
+  reader.onload = async function(ev) {
     try {
       const data = JSON.parse(ev.target.result);
       if (!Array.isArray(data)) throw new Error();
@@ -685,7 +706,7 @@ function importData(event) {
         if (!item.createdAt) item.createdAt = new Date().toISOString();
         if (!entries.find(ex => ex.id === item.id)) { entries.unshift(item); added++; }
       });
-      save();
+      await save();
       render();
       toast(`已导入 ${added} 条新记录`);
     } catch(e) { toast('文件格式错误'); }
@@ -712,14 +733,8 @@ function pasteFromClipboard() {
   });
 }
 
-function detectStoragePath() {
-  const ua = navigator.userAgent;
-  let path = '';
-  if (ua.includes('Edg/')) path = '%LOCALAPPDATA%\\Microsoft\\Edge\\User Data\\Default\\Local Storage\\leveldb\\';
-  else if (ua.includes('Chrome/')) path = '%LOCALAPPDATA%\\Google\\Chrome\\User Data\\Default\\Local Storage\\leveldb\\';
-  else if (ua.includes('Firefox/')) path = '%APPDATA%\\Mozilla\\Firefox\\Profiles\\<profile>\\webappsstore.sqlite';
-  else path = '浏览器配置目录/Local Storage/';
-  document.getElementById('storagePath').textContent = path;
+function displayStoragePath() {
+  document.getElementById('storagePath').textContent = 'D:\\重要数据\\info_data.json';
 }
 
 function setupBookmarklet() {
@@ -737,9 +752,9 @@ function checkAutoFill() {
   }
 }
 
-detectStoragePath();
+displayStoragePath();
 setupBookmarklet();
 checkAutoFill();
-render();
+loadData();
 </script></body>
 </html>

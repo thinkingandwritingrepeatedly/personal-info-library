@@ -27,11 +27,11 @@ code { background: #f0f0f0; padding: 2px 6px; border-radius: 3px; font-family: '
 <div class="doc-header">
 <h1>个人重要信息库</h1>
 <h2 style="border: none; margin: 0; padding: 0; color: #666;">需求文档</h2>
-<p class="version-info">版本: 1.0 | 日期: 2026年5月27日 | 状态: 已完成</p>
+<p class="version-info">版本: 2.0 | 日期: 2026年5月31日 | 状态: 已完成（存储层重构：localStorage → 本地文件系统）</p>
 </div>
 
 <h2>1. 项目概述</h2>
-<p>个人重要信息库是一个本地化的个人信息管理工具，用于安全地存储和管理个人重要信息，如网站地址、账号、密码等。该应用采用单文件HTML设计，数据存储在浏览器本地，确保隐私性和安全性。</p>
+<p>个人重要信息库是一个本地化的个人信息管理工具，用于安全地存储和管理个人重要信息，如网站地址、账号、密码等。该应用采用前端页面+本地数据服务架构，数据存储在本地 JSON 文件中，确保数据持久化和隐私安全性。</p>
 
 <h2>2. 项目目标</h2>
 <ul>
@@ -95,9 +95,9 @@ code { background: #f0f0f0; padding: 2px 6px; border-radius: 3px; font-family: '
 <strong>需求 FR-005: 数据持久化</strong><br>
 <span class="priority-high">优先级: 高</span><br>
 <ul>
-<li>所有数据存储在浏览器 localStorage 中</li>
-<li>数据在浏览器关闭后仍然保留</li>
-<li>提供存储路径提示，警告用户不要清除浏览器数据</li>
+<li>所有数据存储在本地 JSON 文件中</li>
+<li>数据在应用关闭后仍然保留</li>
+<li>提供数据文件路径提示，警告用户不要手动修改文件</li>
 </ul>
 </div>
 
@@ -170,10 +170,10 @@ code { background: #f0f0f0; padding: 2px 6px; border-radius: 3px; font-family: '
 </div>
 
 <div class="requirement">
-<strong>需求 UI-002: 深色主题</strong><br>
+<strong>需求 UI-002: 浅色主题</strong><br>
 <span class="priority-低">优先级: 低</span><br>
 <ul>
-<li>采用深色主题设计，保护用户视力</li>
+<li>采用浅色明亮主题设计，清新易读</li>
 <li>使用渐变色和高对比度提升视觉效果</li>
 </ul>
 </div>
@@ -259,8 +259,8 @@ code { background: #f0f0f0; padding: 2px 6px; border-radius: 3px; font-family: '
 
 <h3>场景 4: 数据备份与恢复</h3>
 <ol>
-<li>用户定期点击"导出备份"下载数据</li>
-<li>如果浏览器数据被清除，用户可以点击"导入"恢复数据</li>
+<li>用户定期点击"导出备份"下载数据作为额外保险</li>
+<li>如果数据文件丢失或损坏，用户可以点击"导入"从备份文件恢复数据</li>
 </ol>
 
 <h2>7. 验收标准</h2>
@@ -303,8 +303,8 @@ code { background: #f0f0f0; padding: 2px 6px; border-radius: 3px; font-family: '
 <h2>8. 约束条件</h2>
 
 <ul>
-<li>单文件 HTML 应用，无需后端服务</li>
-<li>数据存储在浏览器 localStorage，容量限制约 5-10MB</li>
+<li>单文件 HTML 应用 + Node.js 本地数据服务</li>
+<li>数据存储在本地 JSON 文件（D:\重要数据\info_data.json），容量取决于磁盘空间</li>
 <li>不支持跨浏览器数据同步</li>
 <li>不支持多用户管理</li>
 <li>不支持数据加密存储（用户需自行保护浏览器安全）</li>

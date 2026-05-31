@@ -10,7 +10,11 @@
       "Bash(git remote *)",
       "Bash(git branch *)",
       "Bash(git push *)",
-      "Bash(chmod +x .git/hooks/post-commit)"
+      "Bash(chmod +x .git/hooks/post-commit)",
+      "Bash(git commit -m 'Add markdown formatting, multi-line notes, auto-scroll on edit, and collapsible bookmarklet section *)",
+      "Bash(git commit -m 'Move storage notice to bottom, tone down delete button *)",
+      "Bash(git commit -m 'Refine button color hierarchy and entry typography *)",
+      "Bash(git commit -m 'Redesign from dark theme to fresh light style *)"
     ]
   }
 }

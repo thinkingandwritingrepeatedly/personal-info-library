@@ -29,20 +29,38 @@ tr:nth-child(even) { background: #f9f9f9; }
 <div class="doc-header">
 <h1>个人重要信息库</h1>
 <h2 style="border: none; margin: 0; padding: 0; color: #666;">设计文档</h2>
-<p class="version-info">版本: 1.0 | 日期: 2026年5月27日 | 状态: 已完成</p>
+<p class="version-info">版本: 2.0 | 日期: 2026年5月31日 | 状态: 已完成（存储层重构：localStorage → 本地文件系统 + Node.js 数据服务）</p>
 </div>
 
 <h2>1. 系统架构</h2>
 
 <div class="architecture">
 <h3>1.1 整体架构</h3>
-<p>本应用采用单文件 HTML 架构，所有功能集成在一个 HTML 文件中，包含：</p>
+<p>本应用采用前端页面 + 本地数据服务的两层架构：</p>
+
+<h4>前端层（index.html）</h4>
 <ul>
 <li><strong>HTML 结构</strong>：定义页面布局和 DOM 元素</li>
-<li><strong>CSS 样式</strong>：提供深色主题和响应式设计</li>
-<li><strong>JavaScript 逻辑</strong>：实现所有业务功能</li>
+<li><strong>CSS 样式</strong>：提供浅色主题和响应式设计</li>
+<li><strong>JavaScript 逻辑</strong>：实现所有业务功能，通过 HTTP API 与数据服务通信</li>
 </ul>
-<p>这种设计的优点是部署简单、无需服务器、易于分享和备份。</p>
+
+<h4>数据服务层（server.js）</h4>
+<ul>
+<li><strong>静态文件服务</strong>：提供 index.html 的 HTTP 访问</li>
+<li><strong>数据读写 API</strong>：GET /api/data（读取）、POST /api/data（写入）</li>
+<li><strong>文件持久化</strong>：将数据写入 D:\重要数据\info_data.json</li>
+<li><strong>端口自动回退</strong>：从 3456 开始，被占用时自动尝试下一个端口（最多到 3465）</li>
+</ul>
+
+<h4>数据流</h4>
+<pre>浏览器（http://localhost:3456）
+    ↕  fetch API（GET/POST /api/data）
+Node.js 数据服务（server.js）
+    ↕  fs.readFileSync / fs.writeFileSync
+D:\重要数据\info_data.json</pre>
+
+<p>这种设计的优点是数据持久化不受浏览器缓存影响、数据存储容量大、可跨浏览器共享数据。</p>
 </div>
 
 <h2>2. 技术栈</h2>
@@ -55,8 +73,9 @@ tr:nth-child(even) { background: #f9f9f9; }
 </div>
 <div class="tech-item">
 <strong>存储方案</strong><br>
-浏览器 localStorage API<br>
-容量：5-10MB（因浏览器而异）
+Node.js 本地数据服务 + 文件系统<br>
+数据持久化至 D:\重要数据\info_data.json<br>
+容量取决于磁盘空间
 </div>
 <div class="tech-item">
 <strong>兼容性</strong><br>
@@ -78,7 +97,7 @@ CSS Grid + Flexbox<br>
 <strong>职责</strong>：管理数据的增删改查和持久化<br><br>
 <strong>关键函数</strong>：
 <ul>
-<li><code>save()</code> - 将数据保存到 localStorage</li>
+<li><code>save()</code> - 通过 HTTP API 将数据保存到本地 JSON 文件</li>
 <li><code>saveEntry()</code> - 保存单条记录</li>
 <li><code>deleteEntry(id)</code> - 删除单条记录</li>
 <li><code>editEntry(id)</code> - 编辑记录</li>
@@ -110,7 +129,7 @@ CSS Grid + Flexbox<br>
 <li><code>updateBatchBar()</code> - 更新批量操作栏</li>
 </ul>
 <strong>渲染流程</strong>：
-<pre>用户操作 → 修改 entries 数据 → 调用 save() → 调用 render() → 更新 DOM</pre>
+<pre>用户操作 → 修改 entries 数据 → await save() → 调用 render() → 更新 DOM</pre>
 </div>
 
 <h3>3.3 表单管理模块</h3>
@@ -196,7 +215,32 @@ CSS Grid + Flexbox<br>
 </ul>
 </div>
 
-<h3>3.7 书签工具模块</h3>
+<h3>3.7 数据服务模块</h3>
+
+<div class="component">
+<strong>职责</strong>：提供 HTTP API 接口，管理本地 JSON 文件的读写<br><br>
+<strong>服务端文件</strong>：<code>server.js</code>（Node.js，仅使用内置模块 http / fs / path）<br><br>
+<strong>API 接口</strong>：
+<ul>
+<li><code>GET /api/data</code> - 读取 <code>D:\重要数据\info_data.json</code> 并返回 JSON 数组</li>
+<li><code>POST /api/data</code> - 将请求体中的 JSON 数组写入 <code>D:\重要数据\info_data.json</code></li>
+</ul>
+<strong>前端调用</strong>：
+<ul>
+<li><code>loadData()</code> - 页面启动时调用 <code>GET /api/data</code> 加载数据</li>
+<li><code>save()</code> - 数据变更后调用 <code>POST /api/data</code> 持久化（async/await）</li>
+</ul>
+<strong>关键特性</strong>：
+<ul>
+<li>进程标识：<code>process.title = 'info-library-server'</code>，便于在任务管理器识别</li>
+<li>端口自动回退：从 3456 起尝试，被占用则递增（最多 3456~3465）</li>
+<li>请求体大小限制：10MB</li>
+<li>服务启动后自动打开浏览器</li>
+<li>数据目录和文件自动创建（如果不存在）</li>
+</ul>
+</div>
+
+<h3>3.8 书签工具模块</h3>
 
 <div class="component">
 <strong>职责</strong>：生成和管理书签工具<br><br>
@@ -212,15 +256,13 @@ CSS Grid + Flexbox<br>
 4. 书签执行 JavaScript，打开本应用并传递 URL 参数
 5. checkAutoFill() 读取参数，自动填充表单
 6. 用户填写账号密码后保存</pre>
-<strong>书签代码</strong>：
-<pre>javascript:void(window.open(
-  'file:///path/to/passwords.html?autoName='+
-  encodeURIComponent(document.title)+
-  '&autoUrl='+encodeURIComponent(location.href)
+<strong>书签代码</strong>（使用剪贴板 API，兼容 HTTP 环境）：
+<pre>javascript:void(navigator.clipboard.writeText(
+  JSON.stringify({infoLib:true,name:document.title,url:location.href})
 ))</pre>
 </div>
 
-<h3>3.8 统计分析模块</h3>
+<h3>3.9 统计分析模块</h3>
 
 <div class="component">
 <strong>职责</strong>：计算和显示统计信息<br><br>
@@ -246,7 +288,7 @@ CSS Grid + Flexbox<br>
 7. 按频率排序，取前3个</pre>
 </div>
 
-<h3>3.9 事件处理模块</h3>
+<h3>3.10 事件处理模块</h3>
 
 <div class="component">
 <strong>职责</strong>：处理用户交互事件<br><br>
@@ -325,33 +367,33 @@ document.getElementById('entries').addEventListener('click', function(ev) {
 </tr>
 <tr>
 <td>背景</td>
-<td>#1a1a2e, #16213e, #0f3460</td>
-<td>深色渐变背景</td>
+<td>#e8ecf1, #f0f4f8, #e2e8f0</td>
+<td>浅色渐变背景</td>
 </tr>
 <tr>
 <td>主色</td>
-<td>#7b2ff7</td>
+<td>#7c3aed</td>
 <td>紫色，用于强调</td>
 </tr>
 <tr>
 <td>辅色</td>
-<td>#00d2ff</td>
-<td>青色，用于数据</td>
+<td>#06b6d4</td>
+<td>青色，用于数据和链接</td>
 </tr>
 <tr>
 <td>危险色</td>
-<td>#e74c3c</td>
+<td>#dc2626</td>
 <td>红色，用于删除</td>
 </tr>
 <tr>
 <td>警告色</td>
-<td>#f39c12</td>
+<td>#d97706</td>
 <td>橙色，用于关键字</td>
 </tr>
 <tr>
 <td>文字</td>
-<td>#e0e0e0</td>
-<td>浅灰色，易于阅读</td>
+<td>#334155</td>
+<td>深灰色，主文字颜色</td>
 </tr>
 </table>
 
@@ -369,14 +411,14 @@ document.getElementById('entries').addEventListener('click', function(ev) {
 
 <h3>6.1 数据安全</h3>
 <ul>
-<li><strong>本地存储</strong>：所有数据存储在浏览器 localStorage，不上传到服务器</li>
+<li><strong>本地存储</strong>：所有数据存储在本地 JSON 文件（D:\重要数据\info_data.json），不上传到外部服务器</li>
 <li><strong>密码隐藏</strong>：密码默认显示为点号，用户可选择显示</li>
 <li><strong>HTML 转义</strong>：使用 <code>esc()</code> 函数转义用户输入，防止 XSS 攻击</li>
 </ul>
 
 <h3>6.2 用户提示</h3>
 <ul>
-<li>在页面顶部显示存储路径，提醒用户不要清除浏览器数据</li>
+<li>在页面顶部显示数据文件路径，提醒用户不要手动修改文件</li>
 <li>建议用户定期导出备份</li>
 <li>删除操作前要求确认</li>
 </ul>

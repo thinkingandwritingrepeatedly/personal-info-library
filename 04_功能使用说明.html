@@ -33,16 +33,21 @@ tr:nth-child(even) { background: #f9f9f9; }
 <div class="doc-header">
 <h1>个人重要信息库</h1>
 <h2 style="border: none; margin: 0; padding: 0; color: #666;">详细功能使用说明</h2>
-<p class="version-info">版本: 1.0 | 日期: 2026年5月27日 | 用户手册</p>
+<p class="version-info">版本: 2.0 | 日期: 2026年5月31日 | 用户手册（存储层重构）</p>
 </div>
 
 <h2>1. 快速开始</h2>
 
 <div class="feature-box">
 <h3>1.1 打开应用</h3>
-<p>直接在浏览器中打开 <code>passwords.html</code> 文件即可使用。无需安装任何软件或插件。</p>
+<p>先启动本地数据服务，然后通过浏览器访问：</p>
+<div class="step-guide">
+<div class="step"><strong>步骤 1</strong>：双击 <code>start.bat</code> 或在终端运行 <code>node server.js</code></div>
+<div class="step"><strong>步骤 2</strong>：服务启动后自动打开浏览器 <code>http://localhost:3456</code></div>
+<div class="step"><strong>步骤 3</strong>：看到应用页面即可开始使用</div>
+</div>
 <div class="success">
-<strong>✓ 提示</strong>：应用完全在本地运行，所有数据存储在您的浏览器中，不会上传到任何服务器。
+<strong>✓ 提示</strong>：应用完全在本地运行，所有数据存储在 <code>D:\重要数据\info_data.json</code>，不会上传到任何远程服务器。需要 Node.js 环境。
 </div>
 </div>
 
@@ -286,7 +291,7 @@ tr:nth-child(even) { background: #f9f9f9; }
 </div>
 
 <h4>导入数据</h4>
-<p>如果浏览器数据被清除或需要在其他设备上恢复数据，可以导入备份文件。</p>
+<p>如果数据文件丢失或需要在其他设备上恢复数据，可以导入备份文件。</p>
 <div class="step-guide">
 <div class="step"><strong>步骤 1</strong>：点击工具栏中的 <span class="button-label">导入</span> 按钮</div>
 <div class="step"><strong>步骤 2</strong>：选择之前导出的 JSON 文件</div>
@@ -395,29 +400,29 @@ tr:nth-child(even) { background: #f9f9f9; }
 
 <div class="feature-box">
 <h3>4.1 数据存储位置</h3>
-<p>所有数据存储在浏览器的 localStorage 中，具体位置取决于您使用的浏览器：</p>
+<p>所有数据存储在本地 JSON 文件中：</p>
 
 <table>
 <tr>
-<th>浏览器</th>
-<th>存储路径</th>
+<th>项目</th>
+<th>信息</th>
 </tr>
 <tr>
-<td>Chrome</td>
-<td><code>%LOCALAPPDATA%\Google\Chrome\User Data\Default\Local Storage\leveldb\</code></td>
+<td>数据文件</td>
+<td><code>D:\重要数据\info_data.json</code></td>
 </tr>
 <tr>
-<td>Edge</td>
-<td><code>%LOCALAPPDATA%\Microsoft\Edge\User Data\Default\Local Storage\leveldb\</code></td>
+<td>数据服务</td>
+<td>由 <code>server.js</code>（Node.js 本地服务）提供读写接口</td>
 </tr>
 <tr>
-<td>Firefox</td>
-<td><code>%APPDATA%\Mozilla\Firefox\Profiles\&lt;profile&gt;\webappsstore.sqlite</code></td>
+<td>启动方式</td>
+<td>双击 <code>start.bat</code> 或运行 <code>node server.js</code></td>
 </tr>
 </table>
 
 <div class="warning">
-<strong>⚠ 重要</strong>：请勿清除浏览器数据或删除上述目录，否则所有信息将丢失。
+<strong>⚠ 重要</strong>：请勿手动修改或删除 <code>D:\重要数据\info_data.json</code> 文件，否则所有信息将丢失。建议定期使用「导出备份」功能。
 </div>
 
 <h3>4.2 安全建议</h3>
@@ -430,41 +435,41 @@ tr:nth-child(even) { background: #f9f9f9; }
 </ul>
 
 <h3>4.3 隐私保护</h3>
-<p>本应用完全在本地运行，所有数据都存储在您的浏览器中：</p>
+<p>本应用完全在本地运行，数据存储在您的本地磁盘上：</p>
 <ul>
-<li>✓ 数据不上传到任何服务器</li>
+<li>✓ 数据不上传到任何远程服务器</li>
 <li>✓ 不收集任何个人信息</li>
 <li>✓ 不使用任何第三方服务</li>
-<li>✓ 完全离线运行</li>
+<li>✓ 本地离线运行（需启动本地 Node.js 服务）</li>
 </ul>
 </div>
 
 <h2>5. 常见问题</h2>
 
 <div class="feature-box">
-<h3>Q1: 如果我清除了浏览器数据怎么办？</h3>
-<p><strong>A:</strong> 如果您之前导出过备份，可以通过"导入"功能恢复数据。如果没有备份，数据将无法恢复。这就是为什么建议定期导出备份。</p>
+<h3>Q1: 如果我误删了数据文件怎么办？</h3>
+<p><strong>A:</strong> 如果您之前导出过备份，可以通过"导入"功能恢复数据。如果没有备份，数据将无法恢复。这就是为什么建议定期导出备份。数据文件位于 <code>D:\重要数据\info_data.json</code>。</p>
 
 <h3>Q2: 我可以在多个浏览器中使用吗？</h3>
-<p><strong>A:</strong> 可以。每个浏览器都有独立的 localStorage，所以您需要在每个浏览器中分别导入数据。</p>
+<p><strong>A:</strong> 可以。所有浏览器共享同一份数据文件（<code>D:\重要数据\info_data.json</code>），因为数据由本地服务统一管理，不再依赖浏览器独立的 localStorage。</p>
 
 <h3>Q3: 我可以在多个设备上使用吗？</h3>
-<p><strong>A:</strong> 可以。您可以在每个设备上打开 HTML 文件，然后导入备份文件来同步数据。</p>
+<p><strong>A:</strong> 可以。您可以将 <code>D:\重要数据\info_data.json</code> 文件复制到另一台电脑的相同路径，然后在那台电脑上启动服务即可。或者使用导入导出功能来同步数据。</p>
 
 <h3>Q4: 密码是否加密存储？</h3>
-<p><strong>A:</strong> 不是。密码以明文形式存储在 localStorage 中。这就是为什么建议不要在公共计算机上使用此应用。</p>
+<p><strong>A:</strong> 不是。密码以明文形式存储在 JSON 文件中。这就是为什么建议不要在公共计算机上使用此应用。</p>
 
 <h3>Q5: 我可以导出为其他格式吗？</h3>
 <p><strong>A:</strong> 目前只支持 JSON 格式。您可以使用其他工具将 JSON 转换为 CSV 或 Excel 格式。</p>
 
 <h3>Q6: 应用支持哪些浏览器？</h3>
-<p><strong>A:</strong> 支持所有现代浏览器，包括 Chrome、Edge、Firefox、Safari 等。不支持 Internet Explorer。</p>
+<p><strong>A:</strong> 支持所有现代浏览器，包括 Chrome、Edge、Firefox、Safari 等。不支持 Internet Explorer。注意：需要通过 <code>http://localhost</code> 访问，不能直接打开 HTML 文件。</p>
 
-<h3>Q7: 我可以修改 HTML 文件吗？</h3>
-<p><strong>A:</strong> 可以，但不建议。修改可能会导致应用无法正常工作。如果您想自定义功能，建议联系开发者。</p>
+<h3>Q7: 为什么需要 Node.js？</h3>
+<p><strong>A:</strong> Node.js 用来运行本地数据服务（server.js），该服务负责读写磁盘上的 JSON 数据文件。因为浏览器本身无法直接读写本地文件，需要这个服务作为桥梁。</p>
 
 <h3>Q8: 应用会自动保存吗？</h3>
-<p><strong>A:</strong> 是的。每次您添加、编辑或删除记录时，应用都会自动保存到 localStorage。</p>
+<p><strong>A:</strong> 是的。每次您添加、编辑或删除记录时，应用会自动通过本地服务将数据保存到 <code>D:\重要数据\info_data.json</code>。</p>
 </div>
 
 <h2>6. 快速参考</h2>

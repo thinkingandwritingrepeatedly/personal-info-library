@@ -4,22 +4,27 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**个人重要信息库** (Personal Information Library) is a browser-based password and credential manager. It's a single-file HTML application that runs entirely in the browser with no external dependencies or server requirements.
+**个人重要信息库** (Personal Information Library) is a browser-based password and credential manager. The frontend is a single-file HTML application, with a local Node.js server providing data persistence to the file system.
 
 - **Main file**: `index.html` (contains all HTML, CSS, and JavaScript)
-- **Data storage**: Browser localStorage (5-10MB capacity)
-- **Deployment**: Open the HTML file directly in any modern browser
-- **No build process required**
+- **Data service**: `server.js` (Node.js HTTP server, built-in modules only)
+- **Data storage**: `D:\重要数据\info_data.json` (JSON file on local disk)
+- **Deployment**: Start `server.js` first, then open `http://localhost:3456`
+- **Startup**: `start.bat` or `node server.js`
 
 ## Architecture
 
-The application uses a single-file architecture with modular JavaScript functions organized by feature:
+The application uses a single-page frontend with a local data service backend.
+
+```
+Browser (index.html)  ←→  Node.js Server (server.js:3456)  ←→  D:\重要数据\info_data.json
+```
 
 ### Core Modules
 
 1. **Data Management** (`save()`, `saveEntry()`, `deleteEntry()`, `editEntry()`)
    - Manages CRUD operations on the `entries` array
-   - Persists data to localStorage
+   - Persists data via HTTP API (`POST /api/data`) → `D:\重要数据\info_data.json`
    - Data structure: `{ id, name, url, user, pass, note, createdAt }`
 
 2. **UI Rendering** (`render()`, `getFiltered()`, `updateStats()`)
@@ -48,7 +53,7 @@ The application uses a single-file architecture with modular JavaScript function
 
 7. **Bookmarklet Tool** (`setupBookmarklet()`, `pasteFromClipboard()`)
    - Bookmarklet copies current page title and URL to clipboard as JSON
-   - `pasteFromClipboard()` reads clipboard and auto-fills form
+   - `pasteFromClipboard()` reads clipboard and auto-fills the form
    - Workaround for Chrome's security restrictions on file:// URLs
 
 8. **Statistics** (`updateStats()`)
@@ -68,7 +73,7 @@ The application uses a single-file architecture with modular JavaScript function
 - Toggle button shows/hides password in plaintext
 - Copy button copies to clipboard
 
-### Bookmarklet Workflow (Updated)
+### Bookmarklet Workflow
 1. User clicks bookmarklet on any webpage
 2. Bookmarklet copies `{infoLib: true, name: document.title, url: location.href}` to clipboard
 3. Green notification appears on the page
@@ -76,43 +81,53 @@ The application uses a single-file architecture with modular JavaScript function
 5. `pasteFromClipboard()` reads clipboard and auto-fills the form
 
 ### Data Persistence
-- All data stored in `localStorage['pwd_entries']` as JSON string
-- Automatic save on every add/edit/delete operation
+- All data stored in `D:\重要数据\info_data.json` as JSON string
+- `save()` is now async: uses `fetch()` → `POST /api/data` to the local server
+- `loadData()` runs on page load: uses `fetch GET /api/data` to read from server
 - No server sync; data is local-only
+
+### Server (server.js)
+- Built with `http`, `fs`, `path` modules (zero npm dependencies)
+- Serves static files (index.html) and API endpoints
+- `GET /api/data` → reads and returns `D:\重要数据\info_data.json`
+- `POST /api/data` → writes request body to `D:\重要数据\info_data.json`
+- Auto-fallback port (tries 3456-3465)
+- `process.title = 'info-library-server'` for process identification
 
 ## Common Tasks
 
 ### Adding a New Feature
 1. Add HTML elements to the form or list template in the `render()` function
 2. Add corresponding JavaScript logic (usually a new function)
-3. Call `save()` after data changes
+3. Call `await save()` after data changes (note: save is now async)
 4. Call `render()` to update the UI
-5. Test in browser by opening `index.html`
+5. Test by starting `server.js` and visiting `http://localhost:3456`
 
 ### Modifying the Bookmarklet
-- Edit the `setupBookmarklet()` function (line ~642)
+- Edit the `setupBookmarklet()` function
 - The bookmarklet code is minified JavaScript; keep it compact
 - Test by dragging the updated button to bookmarks and clicking it on a test page
 
 ### Changing Data Structure
 - Update the entry object structure in `saveEntry()` and `render()`
 - Update `importData()` to handle migration if needed
-- Consider backward compatibility with existing localStorage data
+- The JSON file at `D:\重要数据\info_data.json` must contain a valid array
 
 ### Styling Changes
 - All CSS is in the `<style>` tag at the top of the file
 - Uses CSS Grid and Flexbox for layout
-- Dark theme with gradient accents (#7b2ff7, #00d2ff)
+- Fresh light style with gradient accents (#7c3aed, #06b6d4)
 - Responsive breakpoint at 600px for mobile
 
 ## Testing
 
 No automated test framework. Manual testing workflow:
-1. Open `index.html` in browser
-2. Test core flows: add entry → edit → delete → search → filter
-3. Test bookmarklet: drag button to bookmarks, click on a webpage, paste in app
-4. Test import/export: export data, clear localStorage, import backup
-5. Test on different browsers (Chrome, Firefox, Edge, Safari)
+1. Run `node server.js` to start the data service
+2. Open `http://localhost:3456` in browser
+3. Test core flows: add entry → edit → delete → search → filter
+4. Test bookmarklet: drag button to bookmarks, click on a webpage, paste in app
+5. Test import/export: export data, delete data file, import backup
+6. Test on different browsers (Chrome, Firefox, Edge, Safari)
 
 ## Documentation Files
 
@@ -120,18 +135,18 @@ No automated test framework. Manual testing workflow:
 - `02_设计文档.html` - Architecture and module design
 - `03_单元测试报告.html` - Test coverage report
 - `04_功能使用说明.html` - User manual
+- `技术文档.md` - Technical documentation
 
 ## Security Notes
 
-- **No encryption**: Passwords stored in plaintext in localStorage
-- **Local-only**: No data sent to servers
-- **Browser-dependent**: Data lost if browser cache is cleared
+- **No encryption**: Passwords stored in plaintext in JSON file
+- **Local-only**: Data stored on local disk, served only to localhost
+- **File-dependent**: Data lost if JSON file is deleted or corrupted
 - **Backup recommended**: Users should regularly export backups
 - **Not for public computers**: Intended for personal use only
 
-## Browser Compatibility
+## Prerequisites
 
-- Chrome 4+, Firefox 3.5+, Edge, Safari
-- Requires localStorage support
-- Requires Clipboard API for bookmarklet paste feature
-- Modern CSS features (Grid, Flexbox, gradients)
+- **Node.js** (v12+) required to run the data service
+- **Modern browser**: Chrome, Edge, Firefox, Safari
+- **Clipboard API** required for bookmarklet paste feature
